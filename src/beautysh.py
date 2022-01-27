@@ -435,7 +435,7 @@ class Beautify:
 
             # Adding all the lines after the last function declaration to the new_data string.
             for i in range(int(functions[list(functions)[len(functions) -1]].split(';')[1]) + 1, len(lines)):
-                new_data += "%s"%(lines[i])
+                new_data += "\n%s"%(lines[i])
 
             if new_data != data:
                 errors[path] += "The file contains function order issue(s).\n"
