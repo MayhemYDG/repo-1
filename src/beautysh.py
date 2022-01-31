@@ -485,6 +485,34 @@ class Beautify:
 
         return "\n".join(lines)
 
+    def fix_multiline_statements(self, data):
+        """Fixes multiline indentations"""
+
+        lines = data.split('\n')
+        started = False
+        start_regexp = re.compile(r"^\s*(if|elif|for|while)")
+        end_regexp = re.compile(r"^\s*(case|then|do)")
+        output=[]
+        start_tab_count=0
+
+        for line in lines:
+            new_line = line
+
+            if end_regexp.search(new_line):
+                started = False
+                start_tab_count=0
+
+            if started:
+                new_line="%s%s"%((self.tab_str * (start_tab_count + 1)), new_line.replace(self.tab_str, ''))
+
+            if start_regexp.search(new_line):
+                started = True
+                start_tab_count = new_line.count(self.tab_str)
+
+            output.append(new_line)
+
+        return "\n".join(output)
+
     def check_last_line(self, data, path):
         """Checks if the last line is empty"""
         lines = data.split('\n')
@@ -522,6 +550,9 @@ class Beautify:
                 result = self.check_variable_order(result, path)
             if self.exit_code_check:
                 result = self.check_line_break_before_exit_code(result, path)
+
+            result = self.fix_multiline_statements(result)
+
             sys.stdout.write(result)
         else:  # named file
             data = self.read_file(path)
@@ -540,6 +571,9 @@ class Beautify:
                 result = self.check_variable_order(result, path)
             if self.exit_code_check:
                 result = self.check_line_break_before_exit_code(result, path)
+
+            result = self.fix_multiline_statements(result)
+
             if data != result:
                 if self.check_only:
                     if not error:
