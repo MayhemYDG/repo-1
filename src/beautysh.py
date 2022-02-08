@@ -485,6 +485,12 @@ class Beautify:
 
         return "\n".join(lines)
 
+    def get_number_of_extra_spaces(self, line):
+        line=re.sub('^\t*', '', line)
+        new_line=re.sub('^\s*(if|elif|for|while)\s*', '', line)
+
+        return len(line) - len(new_line)
+
     def fix_multiline_statements(self, data):
         """Fixes multiline indentations"""
 
@@ -500,14 +506,16 @@ class Beautify:
 
             if end_regexp.search(new_line):
                 started = False
-                start_tab_count=0
+                tab_count=0
+                number_of_extra_spaces=0
 
             if started:
-                new_line="%s%s"%((self.tab_str * (start_tab_count + 1)), new_line.replace(self.tab_str, ''))
+                new_line="%s%s"%((self.tab_str * (tab_count) + (" " * number_of_extra_spaces)), re.sub('^\s*', '', new_line))
 
             if start_regexp.search(new_line):
                 started = True
-                start_tab_count = new_line.count(self.tab_str)
+                tab_count=new_line.count('\t')
+                number_of_extra_spaces = self.get_number_of_extra_spaces(new_line)                
 
             output.append(new_line)
 
