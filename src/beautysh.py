@@ -123,10 +123,10 @@ class Beautify:
         for record in re.split("\n", data):
             record = record.rstrip()
             stripped_record = record.strip()
-            continued_if = False
+            continued_nested_if = False
 
-            if (re.search(r'.*&{1,2}|.*\|{1,2}$', record)):
-                continued_if = True
+            if (re.search(r'.*&{1,2}|.*\|{1,2}$', record)) and (re.search(r'^\s*\[{1,2}|^\s*\({1,2}', record)) and not (re.search(r'^\s*\]{1,2}|^\s*\){1,2}', record)):
+                continued_nested_if = True
 
             # preserve blank lines
             if not stripped_record:
@@ -211,7 +211,7 @@ class Beautify:
                         continue
 
                     # multi-line conditions are often meticulously formatted
-                    if open_brackets or continued_if:
+                    if open_brackets and continued_nested_if:
                         output.append(record)
                     else:
                         inc = len(re.findall(r"(\s|\A|;)(case|then|do)(;|\Z|\s)", test_record))
@@ -259,7 +259,7 @@ class Beautify:
                         net = inc - outc
                         tab += min(net, 0)
 
-                        # while 'tab' idasdas and is used for some adjustments:
+                        # while 'tab' id and is used for some adjustments:
                         extab = tab + else_case + choice_case
                         if (
                             prev_line_had_continue
@@ -394,6 +394,7 @@ class Beautify:
     def change_function_order(self, data, path):
         """Checks if the functions are in ABC order. If not, then change the order."""
         regexp = re.compile(r'function.*')
+        function_end_regexp = re.compile(r'^\s*}\s*$')
         if regexp.search(data):
             lines = data.split('\n')
             functions={}
@@ -407,8 +408,9 @@ class Beautify:
                     start_line = line.replace(" {", "").replace("function ", "")
                     start_line_number = line_number
 
+
                 # If there is already a function definition found and the line only consist of }, the script assumes that this is the end of the function
-                if start_line_number > -1 and line == "}":
+                if start_line_number > -1 and function_end_regexp.search(line):
                     # Saving the function name (key) and the start and stop line numbers (value)
                     functions[start_line] = "%s;%s"%(start_line_number,line_number)
                     start_line_number = -1
