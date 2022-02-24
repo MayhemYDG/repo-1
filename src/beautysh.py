@@ -739,7 +739,7 @@ class Beautify:
             "--line-end",
             "-l",
             action="store_true",
-            help="Beautysh will check if the file contains non English characters.",
+            help="Beautysh will check if the file ends without empty line.",
         )
         parser.add_argument(
             "files",

@@ -3,7 +3,8 @@
 if [[ ! -f /mnt/beautysh.arguments ]]
 then
   echo "No beautysh.arguments file found."
-  beautysh.py -help
+  echo -e "List of available arguments:\n"
+  beautysh.py --help
   exit 1
 fi
 
