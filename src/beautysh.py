@@ -287,7 +287,7 @@ class Beautify:
 
     def reorder_arguments(self, regexp, value, black_list):
         """Changes the Argument order to be in alphabetical."""
-        ignore_regexp = re.compile(r'cut .*|sed .*')
+        ignore_regexp = re.compile(r'cut .*|sed .*|curl .*')
         splits = value.split(' ')
         splits_length = len(splits)
         arguments={}
