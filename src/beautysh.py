@@ -287,10 +287,15 @@ class Beautify:
 
     def reorder_arguments(self, regexp, value, black_list):
         """Changes the Argument order to be in alphabetical."""
+        ignore_regexp = re.compile(r'cut .*|sed .*')
         splits = value.split(' ')
         splits_length = len(splits)
         arguments={}
         first_index = 0
+
+        # If the command is 'cut' we ignore it, as it's very order sensitive
+        if ignore_regexp.search(value):
+            return value
 
         # If the substring matches the regex, it means that the string contains at least one argument
         if regexp.search(value):
@@ -315,7 +320,7 @@ class Beautify:
             for j in range(1, first_index):
                 new_substring += " %s"%(splits[j])
             # Ordering the selected arguments by ABC and putting them in with their value pairs
-            for ordered_agrument in sorted([re.sub(r'^-*', '', w) for w in arguments]):
+            for ordered_agrument in sorted([re.sub(r'^-*', '', w) for w in arguments], key=str.casefold):
                 if "-%s"%(ordered_agrument) in arguments:
                     ordered_agrument = "-%s"%(ordered_agrument)
                 elif "--%s"%(ordered_agrument) in arguments:
@@ -335,6 +340,7 @@ class Beautify:
     def change_argument_order(self, data, path):
         """Checks if the argument calls are in ABC order in the line. If not, then change the order."""
         regexp = re.compile(r' -{1,2}[a-zA-Z]+')
+        loop_regexp = re.compile(r'for .* in \$\(.*\)')
         black_list = "|,&;"
 
         for line in data.split('\n'):
@@ -353,6 +359,13 @@ class Beautify:
                             values = re.findall('\$\(.*\)', b)
 
                             for i in range(len(keys)):
+                                subshells[keys[i]] = values[i]
+                #In case a loop uses subshell
+                if loop_regexp.search(line):
+                    keys=re.findall('for .* in', line)
+                    values = re.findall('\$\(.*\)', line)
+
+                    for i in range(len(keys)):
                                 subshells[keys[i]] = values[i]
                 
                 # Deleting subshells from the line
