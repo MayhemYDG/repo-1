@@ -17,7 +17,12 @@ containers:
       - {{ . }}
       {{- end }}
     securityContext:
+      {{- if and (not (.Values.securityContext)) (.Values.presets.logsCollection.storeCheckpoints) }}
+      runAsUser: 0
+      runAsGroup: 0
+      {{- else -}}
       {{- toYaml .Values.securityContext | nindent 6 }}
+      {{- end }}
     image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
     imagePullPolicy: {{ .Values.image.pullPolicy }}
     ports:
@@ -37,20 +42,6 @@ containers:
           fieldRef:
             apiVersion: v1
             fieldPath: status.podIP
-      {{- if .Values.presets.hostMetrics.enabled }}
-      - name: HOST_PROC
-        value: /hostfs/proc
-      - name: HOST_SYS
-        value: /hostfs/sys
-      - name: HOST_ETC
-        value: /hostfs/etc
-      - name: HOST_VAR
-        value: /hostfs/var
-      - name: HOST_RUN
-        value: /hostfs/run
-      - name: HOST_DEV
-        value: /hostfs/dev
-      {{- end }}
       {{- if .Values.presets.kubeletMetrics.enabled }}
       - name: K8S_NODE_NAME
         valueFrom:
@@ -110,6 +101,10 @@ containers:
       - name: varlibdockercontainers
         mountPath: /var/lib/docker/containers
         readOnly: true
+      {{- if .Values.presets.logsCollection.storeCheckpoints}}
+      - name: varlibotelcol
+        mountPath: /var/lib/otelcol
+      {{- end }}
       {{- end }}
       {{- if .Values.presets.hostMetrics.enabled }}
       - name: hostfs
@@ -120,6 +115,9 @@ containers:
       {{- if .Values.extraVolumeMounts }}
       {{- toYaml .Values.extraVolumeMounts | nindent 6 }}
       {{- end }}
+{{- with .Values.extraContainers }}
+{{- toYaml . | nindent 2 }}
+{{- end }}
 {{- if .Values.initContainers }}
 initContainers:
   {{- toYaml .Values.initContainers | nindent 2 }}
@@ -155,6 +153,12 @@ volumes:
   - name: varlogpods
     hostPath:
       path: /var/log/pods
+  {{- if .Values.presets.logsCollection.storeCheckpoints}}
+  - name: varlibotelcol
+    hostPath:
+      path: /var/lib/otelcol
+      type: DirectoryOrCreate
+  {{- end }}
   - name: varlibdockercontainers
     hostPath:
       path: /var/lib/docker/containers

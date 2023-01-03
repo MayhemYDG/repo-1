@@ -16,10 +16,26 @@ imagePullSecrets: []
 manager:
   image:
     repository: ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator
-    tag: v0.61.0
+    tag: v0.66.0
   collectorImage:
     repository: otel/opentelemetry-collector-contrib
-    tag: 0.62.1
+    tag: 0.67.0
+  targetAllocatorImage:
+    repository: ""
+    tag: ""
+  autoInstrumentationImage:
+    java:
+      repository: ""
+      tag: ""
+    nodejs:
+      repository: ""
+      tag: ""
+    python:
+      repository: ""
+      tag: ""
+    dotnet:
+      repository: ""
+      tag: ""
   ports:
     metricsPort: 8080
     webhookPort: 9443
@@ -50,6 +66,7 @@ manager:
     - port: metrics
 
   podAnnotations: {}
+  podLabels: {}
 
   prometheusRule:
     enabled: false
@@ -63,7 +80,7 @@ manager:
 
 
   ## List of additional cli arguments to configure the manager
-  ## for example: --target-allocator-image, --labels, etc.
+  ## for example: --labels, etc.
   extraArgs: []
 
   ## Enable leader election mechanism for protecting against split brain if multiple operator pods/replicas are started.
@@ -77,7 +94,7 @@ kubeRBACProxy:
   enabled: true
   image:
     repository: gcr.io/kubebuilder/kube-rbac-proxy
-    tag: v0.11.0
+    tag: v0.13.0
   ports:
     proxyPort: 8443
   resources:
@@ -87,6 +104,10 @@ kubeRBACProxy:
     requests:
       cpu: 5m
       memory: 64Mi
+
+  ## List of additional cli arguments to configure the kube-rbac-proxy
+  ## for example: --tls-cipher-suites, --tls-min-version, etc.
+  extraArgs: []
 
 ## Admission webhooks make sure only requests with correctly formatted rules will get into the Operator.
 ## They also enable the sidecar injection for OpenTelemetryCollector and Instrumentation CR's
@@ -124,6 +145,7 @@ clusterRole:
 affinity: {}
 tolerations: []
 nodeSelector: {}
+topologySpreadConstraints: []
 hostNetwork: false
 
 # Allows for pod scheduler prioritisation
@@ -132,10 +154,10 @@ priorityClassName: ""
 ## SecurityContext holds pod-level security attributes and common container settings.
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 securityContext:
-  runAsGroup: 65534
+  runAsGroup: 65532
   runAsNonRoot: true
-  runAsUser: 65534
-  fsGroup: 65534
+  runAsUser: 65532
+  fsGroup: 65532
 
 testFramework:
   image:

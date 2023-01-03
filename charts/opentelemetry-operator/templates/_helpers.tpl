@@ -40,6 +40,7 @@ helm.sh/chart: {{ include "opentelemetry-operator.chart" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
@@ -47,7 +48,6 @@ Selector labels
 */}}
 {{- define "opentelemetry-operator.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "opentelemetry-operator.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
@@ -64,5 +64,11 @@ Create the name of the service account to use
 {{- define "opentelemetry-operator.podAnnotations" -}}
 {{- if .Values.manager.podAnnotations }}
 {{- .Values.manager.podAnnotations | toYaml }}
+{{- end }}
+{{- end }}
+
+{{- define "opentelemetry-operator.podLabels" -}}
+{{- if .Values.manager.podLabels }}
+{{- .Values.manager.podLabels | toYaml }}
 {{- end }}
 {{- end }}

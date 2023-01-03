@@ -4,8 +4,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
+    helm.sh/chart: opentelemetry-operator-0.20.4
     app.kubernetes.io/name: opentelemetry-operator
-    control-plane: controller-manager
+    app.kubernetes.io/version: "0.66.0"
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: example
+    app.kubernetes.io/component: controller-manager
   name: opentelemetry-operator-controller-manager
   namespace: default
 spec:
@@ -13,7 +17,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: opentelemetry-operator
-      control-plane: controller-manager
+      app.kubernetes.io/component: controller-manager
   template:
     metadata:
       annotations:
@@ -21,7 +25,8 @@ spec:
         
       labels:
         app.kubernetes.io/name: opentelemetry-operator
-        control-plane: controller-manager
+        
+        app.kubernetes.io/component: controller-manager
     spec:
       hostNetwork: false
       containers:
@@ -30,13 +35,13 @@ spec:
             - --enable-leader-election
             - --health-probe-addr=:8081
             - --webhook-port=9443
-            - --collector-image=otel/opentelemetry-collector-contrib:0.62.1
+            - --collector-image=otel/opentelemetry-collector-contrib:0.67.0
           command:
             - /manager
           env:
             - name: ENABLE_WEBHOOKS
               value: "true"
-          image: "ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator:v0.61.0"
+          image: "ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator:v0.66.0"
           name: manager
           ports:
             - containerPort: 8080
@@ -74,7 +79,7 @@ spec:
             - --upstream=http://127.0.0.1:8080/
             - --logtostderr=true
             - --v=0
-          image: "gcr.io/kubebuilder/kube-rbac-proxy:v0.11.0"
+          image: "gcr.io/kubebuilder/kube-rbac-proxy:v0.13.0"
           name: kube-rbac-proxy
           ports:
             - containerPort: 8443
@@ -95,7 +100,7 @@ spec:
             defaultMode: 420
             secretName: opentelemetry-operator-controller-manager-service-cert
       securityContext:
-        fsGroup: 65534
-        runAsGroup: 65534
+        fsGroup: 65532
+        runAsGroup: 65532
         runAsNonRoot: true
-        runAsUser: 65534
+        runAsUser: 65532

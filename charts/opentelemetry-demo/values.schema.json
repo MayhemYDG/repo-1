@@ -26,6 +26,9 @@
     "opentelemetry-collector": {
       "type": "object"
     },
+    "jaeger": {
+      "type": "object"
+    },
     "prometheus": {
       "type": "object"
     },
@@ -43,7 +46,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "redis": {
+        "accountingService": {
           "$ref": "#/definitions/Service"
         },
         "adService": {
@@ -64,7 +67,7 @@
         "featureflagService": {
           "$ref": "#/definitions/Service"
         },
-        "ffsPostgres": {
+        "frauddetectionService": {
           "$ref": "#/definitions/Service"
         },
         "frontend": {
@@ -90,6 +93,15 @@
         },
         "quoteService": {
           "$ref": "#/definitions/Service"
+        },
+        "ffsPostgres": {
+          "$ref": "#/definitions/Service"
+        },
+        "kafka": {
+          "$ref": "#/definitions/Service"
+        },
+        "redis": {
+          "$ref": "#/definitions/Service"
         }
       },
       "title": "Components"
@@ -114,11 +126,20 @@
             "env"
           ]
         },
+        "imageOverride": {
+          "$ref": "#/definitions/Image"
+        },
         "serviceType": {
           "type": "string"
         },
         "servicePort": {
           "type": "integer"
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Port"
+          }
         },
         "env": {
           "type": "array",
@@ -132,14 +153,12 @@
             "$ref": "#/definitions/Env"
           }
         },
-        "ports": {
+        "command": {
           "type": "array",
-          "items": {
-            "$ref": "#/definitions/Port"
-          }
+          "items": {}
         },
-        "imageOverride": {
-          "$ref": "#/definitions/Image"
+        "configuration": {
+          "type": "object"
         },
         "schedulingRules": {
           "$ref": "#/definitions/SchedulingRules"
@@ -149,6 +168,12 @@
         },
         "resources": {
           "$ref": "#/definitions/ContainerResources"
+        },
+        "securityContext": {
+          "type": "object"
+        },
+        "ingress": {
+          "$ref": "#/definitions/Ingress"
         }
       },
       "required": [
@@ -215,11 +240,15 @@
         },
         "schedulingRules": {
           "$ref": "#/definitions/SchedulingRules"
+        },
+        "securityContext": {
+          "type": "object"
         }
       },
       "required": [
         "image",
-        "schedulingRules"
+        "schedulingRules",
+        "securityContext"
       ],
       "title": "Default"
     },
@@ -331,19 +360,6 @@
           "properties": {
             "enabled": {
               "type": "boolean"
-            },
-            "image": {
-              "$ref": "#/definitions/Image"
-            },
-            "args": {
-              "type": "array",
-              "items": {}
-            },
-            "resources": {
-              "$ref": "#/definitions/ContainerResources"
-            },
-            "serviceType": {
-              "type": "string"
             }
           }
         },
@@ -430,6 +446,167 @@
           "items": {}
         }
       }
+    },
+    "Ingress": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "ingressClassName": {
+          "type": "string"
+        },
+        "annotations": {
+          "type": "object"
+        },
+        "hosts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "paths": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    },
+                    "pathType": {
+                      "type": "string",
+                      "enum": [
+                        "Exact",
+                        "Prefix",
+                        "ImplementationSpecific"
+                      ]
+                    },
+                    "port": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "pathType",
+                    "port"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "paths"
+            ]
+          }
+        },
+        "tls": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "secretName": {
+                "type": "string"
+              },
+              "hosts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "additionalIngresses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "ingressClassName": {
+                "type": "string"
+              },
+              "annotations": {
+                "type": "object"
+              },
+              "hosts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "host": {
+                      "type": "string"
+                    },
+                    "paths": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "pathType": {
+                            "type": "string",
+                            "enum": [
+                              "Exact",
+                              "Prefix",
+                              "ImplementationSpecific"
+                            ]
+                          },
+                          "port": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "path",
+                          "pathType",
+                          "port"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "paths"
+                  ]
+                }
+              },
+              "tls": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "secretName": {
+                      "type": "string"
+                    },
+                    "hosts": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        }
+      },
+      "required": [
+        "enabled"
+      ]
     }
   }
 }

@@ -86,13 +86,13 @@
                             "default": "",
                             "title": "The tag Schema",
                             "examples": [
-                                "v0.60.0"
+                                "v0.66.0"
                             ]
                         }
                     },
                     "examples": [{
                         "repository": "ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator",
-                        "tag": "v0.60.0"
+                        "tag": "v0.66.0"
                     }]
                 },
                 "collectorImage": {
@@ -109,7 +109,7 @@
                             "default": "",
                             "title": "The repository Schema",
                             "examples": [
-                                "otel/opentelemetry-collector"
+                                "otel/opentelemetry-collector-contrib"
                             ]
                         },
                         "tag": {
@@ -117,13 +117,13 @@
                             "default": "",
                             "title": "The tag Schema",
                             "examples": [
-                                "0.62.1"
+                                "0.67.0"
                             ]
                         }
                     },
                     "examples": [{
-                        "repository": "otel/opentelemetry-collector",
-                        "tag": "0.62.1"
+                        "repository": "otel/opentelemetry-collector-contrib",
+                        "tag": "0.67.0"
                     }]
                 },
                 "ports": {
@@ -431,6 +431,168 @@
                         "extraLabels": {}
                     }]
                 },
+                "targetAllocatorImage": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The targetAllocatorImage Schema",
+                    "required": [
+                        "repository",
+                        "tag"
+                    ],
+                    "properties": {
+                        "repository": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The repository Schema",
+                            "examples": [
+                                "ghcr.io/open-telemetry/opentelemetry-operator/target-allocator"
+                            ]
+                        },
+                        "tag": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The tag Schema",
+                            "examples": [
+                                "0.66.0"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "repository": "ghcr.io/open-telemetry/opentelemetry-operator/target-allocator",
+                        "tag": "0.66.0"
+                    }]
+                },
+                "autoInstrumentationImage": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The autoInstrumentationImage Schema",
+                    "properties": {
+                        "java": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The java Schema",
+                            "required": [
+                                "repository",
+                                "tag"
+                            ],
+                            "properties": {
+                                "repository": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The repository Schema",
+                                    "examples": [
+                                        "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java"
+                                    ]
+                                },
+                                "tag": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The tag Schema",
+                                    "examples": [
+                                        "1.20.2"
+                                    ]
+                                }
+                            },
+                            "examples": [{
+                                "repository": "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-java",
+                                "tag": "1.20.2"
+                            }]
+                        },
+                        "nodejs": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The nodejs Schema",
+                            "required": [
+                                "repository",
+                                "tag"
+                            ],
+                            "properties": {
+                                "repository": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The repository Schema",
+                                    "examples": [
+                                        "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-nodejs"
+                                    ]
+                                },
+                                "tag": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The tag Schema",
+                                    "examples": [
+                                        "0.31.0"
+                                    ]
+                                }
+                            },
+                            "examples": [{
+                                "repository": "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-nodejs",
+                                "tag": "0.31.0"
+                            }]
+                        },
+                        "python": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The python Schema",
+                            "required": [
+                                "repository",
+                                "tag"
+                            ],
+                            "properties": {
+                                "repository": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The repository Schema",
+                                    "examples": [
+                                        "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-python"
+                                    ]
+                                },
+                                "tag": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The tag Schema",
+                                    "examples": [
+                                        "0.35b0"
+                                    ]
+                                }
+                            },
+                            "examples": [{
+                                "repository": "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-python",
+                                "tag": "0.35b0"
+                            }]
+                        },
+                        "dotnet": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The dotnet Schema",
+                            "required": [
+                                "repository",
+                                "tag"
+                            ],
+                            "properties": {
+                                "repository": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The repository Schema",
+                                    "examples": [
+                                        "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-dotnet"
+                                    ]
+                                },
+                                "tag": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The tag Schema",
+                                    "examples": [
+                                        "0.5.0"
+                                    ]
+                                }
+                            },
+                            "examples": [{
+                                "repository": "ghcr.io/open-telemetry/opentelemetry-operator/autoinstrumentation-dotnet",
+                                "tag": "0.5.0"
+                            }]
+                        }
+                    }
+                },
                 "extraArgs": {
                     "type": "array",
                     "default": [],
@@ -465,11 +627,11 @@
             "examples": [{
                 "image": {
                     "repository": "ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator",
-                    "tag": "v0.60.0"
+                    "tag": "v0.66.0"
                 },
                 "collectorImage": {
-                    "repository": "otel/opentelemetry-collector",
-                    "tag": "0.62.1"
+                    "repository": "otel/opentelemetry-collector-contrib",
+                    "tag": "0.67.0"
                 },
                 "ports": {
                     "metricsPort": 8080,
@@ -521,7 +683,8 @@
                 "enabled",
                 "image",
                 "ports",
-                "resources"
+                "resources",
+                "extraArgs"
             ],
             "properties": {
                 "enabled": {
@@ -554,13 +717,13 @@
                             "default": "",
                             "title": "The tag Schema",
                             "examples": [
-                                "v0.11.0"
+                                "v0.13.0"
                             ]
                         }
                     },
                     "examples": [{
                         "repository": "gcr.io/kubebuilder/kube-rbac-proxy",
-                        "tag": "v0.11.0"
+                        "tag": "v0.13.0"
                     }]
                 },
                 "ports": {
@@ -666,13 +829,22 @@
                             "memory": "64Mi"
                         }
                     }]
+                },
+                "extraArgs": {
+                    "type": "array",
+                    "default": [],
+                    "title": "The extraArgs Schema",
+                    "items": {},
+                    "examples": [
+                        []
+                    ]
                 }
             },
             "examples": [{
                 "enabled": true,
                 "image": {
                     "repository": "gcr.io/kubebuilder/kube-rbac-proxy",
-                    "tag": "v0.11.0"
+                    "tag": "v0.13.0"
                 },
                 "ports": {
                     "proxyPort": 8443
@@ -686,7 +858,8 @@
                         "cpu": "5m",
                         "memory": "64Mi"
                     }
-                }
+                },
+                "extraArgs": []
             }]
         },
         "admissionWebhooks": {
@@ -986,11 +1159,11 @@
         "manager": {
             "image": {
                 "repository": "ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator",
-                "tag": "v0.60.0"
+                "tag": "v0.66.0"
             },
             "collectorImage": {
-                "repository": "otel/opentelemetry-collector",
-                "tag": "0.62.1"
+                "repository": "otel/opentelemetry-collector-contrib",
+                "tag": "0.67.0"
             },
             "ports": {
                 "metricsPort": 8080,
@@ -1037,7 +1210,7 @@
             "enabled": true,
             "image": {
                 "repository": "gcr.io/kubebuilder/kube-rbac-proxy",
-                "tag": "v0.11.0"
+                "tag": "v0.13.0"
             },
             "ports": {
                 "proxyPort": 8443
