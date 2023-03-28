@@ -77,17 +77,17 @@ config:
     jaeger:
       protocols:
         grpc:
-          endpoint: 0.0.0.0:14250
+          endpoint: ${MY_POD_IP}:14250
         thrift_http:
-          endpoint: 0.0.0.0:14268
+          endpoint: ${MY_POD_IP}:14268
         thrift_compact:
-          endpoint: 0.0.0.0:6831
+          endpoint: ${MY_POD_IP}:6831
     otlp:
       protocols:
         grpc:
-          endpoint: 0.0.0.0:4317
+          endpoint: ${MY_POD_IP}:4317
         http:
-          endpoint: 0.0.0.0:4318
+          endpoint: ${MY_POD_IP}:4318
     prometheus:
       config:
         scrape_configs:
@@ -97,11 +97,11 @@ config:
               - targets:
                   - ${MY_POD_IP}:8888
     zipkin:
-      endpoint: 0.0.0.0:9411
+      endpoint: ${MY_POD_IP}:9411
   service:
     telemetry:
       metrics:
-        address: 0.0.0.0:8888
+        address: ${MY_POD_IP}:8888
     extensions:
       - health_check
       - memory_ballast
@@ -160,13 +160,18 @@ serviceAccount:
 
 clusterRole:
   # Specifies whether a clusterRole should be created
+  # Some presets also trigger the creation of a cluster role and cluster role binding.
+  # If using one of those presets, this field is no-op.
   create: false
   # Annotations to add to the clusterRole
+  # Can be used in combination with presets that create a cluster role.
   annotations: {}
   # The name of the clusterRole to use.
-  # If not set and create is true, a name is generated using the fullname template
+  # If not set a name is generated using the fullname template
+  # Can be used in combination with presets that create a cluster role.
   name: ""
   # A set of rules as documented here : https://kubernetes.io/docs/reference/access-authn-authz/rbac/
+  # Can be used in combination with presets that create a cluster role to add additional rules.
   rules: []
   # - apiGroups:
   #   - ''
@@ -180,9 +185,11 @@ clusterRole:
 
   clusterRoleBinding:
     # Annotations to add to the clusterRoleBinding
+    # Can be used in combination with presets that create a cluster role binding.
     annotations: {}
     # The name of the clusterRoleBinding to use.
-    # If not set and create is true, a name is generated using the fullname template
+    # If not set a name is generated using the fullname template
+    # Can be used in combination with presets that create a cluster role binding.
     name: ""
 
 podSecurityContext: {}
@@ -191,6 +198,7 @@ securityContext: {}
 nodeSelector: {}
 tolerations: []
 affinity: {}
+topologySpreadConstraints: {}
 
 # Allows for pod scheduler prioritisation
 priorityClassName: ""
@@ -200,6 +208,7 @@ extraVolumes: []
 extraVolumeMounts: []
 
 # Configuration for ports
+# nodePort is also allowed
 ports:
   otlp:
     enabled: true
@@ -207,6 +216,8 @@ ports:
     servicePort: 4317
     hostPort: 4317
     protocol: TCP
+    # nodePort: 30317
+    appProtocol: grpc
   otlp-http:
     enabled: true
     containerPort: 4318
@@ -264,6 +275,9 @@ dnsPolicy: ""
 # only used with deployment mode
 replicaCount: 1
 
+# only used with deployment mode
+revisionHistoryLimit: 10
+
 annotations: {}
 
 # List of extra sidecars to add
@@ -281,18 +295,28 @@ extraContainers: []
 #         mountPath: /test
 
 # List of init container specs, e.g. for copying a binary to be executed as a lifecycle hook.
+# Another usage of init containers is e.g. initializing filesystem permissions to the OTLP Collector user `10001` in case you are using persistence and the volume is producing a permission denied error for the OTLP Collector container.
 initContainers: []
 # initContainers:
 #   - name: test
+#     image: busybox:latest
 #     command:
 #       - cp
 #     args:
 #       - /bin/sleep
 #       - /test/sleep
-#     image: busybox:latest
 #     volumeMounts:
 #       - name: test
 #         mountPath: /test
+#  - name: init-fs
+#    image: busybox:latest
+#    command:
+#      - sh
+#      - '-c'
+#      - 'chown -R 10001: /var/lib/storage/otc' # use the path given as per `extensions.file_storage.directory` & `extraVolumeMounts[x].mountPath`
+#    volumeMounts:
+#      - name: opentelemetry-collector-data # use the name of the volume used for persistence
+#        mountPath: /var/lib/storage/otc # use the path given as per `extensions.file_storage.directory` & `extraVolumeMounts[x].mountPath`
 
 # Pod lifecycle policies.
 lifecycleHooks: {}
@@ -307,6 +331,7 @@ service:
   type: ClusterIP
   # type: LoadBalancer
   # loadBalancerIP: 1.2.3.4
+  # loadBalancerSourceRanges: []
   annotations: {}
 
 ingress:

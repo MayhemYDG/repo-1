@@ -7,7 +7,7 @@ serviceAccountName: {{ include "opentelemetry-collector.serviceAccountName" . }}
 securityContext:
   {{- toYaml .Values.podSecurityContext | nindent 2 }}
 containers:
-  - name: {{ .Chart.Name }}
+  - name: {{ include "opentelemetry-collector.lowercase_chartname" . }}
     command:
       - /{{ .Values.command.name }}
       {{- if .Values.configMap.create }}
@@ -35,9 +35,6 @@ containers:
       - name: {{ $key }}
         containerPort: {{ $port.containerPort }}
         protocol: {{ $port.protocol }}
-        {{- if $port.appProtocol }}
-        appProtocol: {{ $port.appProtocol }}
-        {{- end }}
         {{- if and $.isAgent $port.hostPort }}
         hostPort: {{ $port.hostPort }}
         {{- end }}
@@ -75,7 +72,7 @@ containers:
     volumeMounts:
       {{- if .Values.configMap.create }}
       - mountPath: /conf
-        name: {{ .Chart.Name }}-configmap
+        name: {{ include "opentelemetry-collector.lowercase_chartname" . }}-configmap
       {{- end }}
       {{- range .Values.extraConfigMapMounts }}
       - name: {{ .name }}
@@ -127,14 +124,14 @@ containers:
 {{- end }}
 {{- if .Values.initContainers }}
 initContainers:
-  {{- toYaml .Values.initContainers | nindent 2 }}
+  {{- tpl (toYaml .Values.initContainers) . | nindent 2 }}
 {{- end }}
 {{- if .Values.priorityClassName }}
 priorityClassName: {{ .Values.priorityClassName | quote }}
 {{- end }}
 volumes:
   {{- if .Values.configMap.create }}
-  - name: {{ .Chart.Name }}-configmap
+  - name: {{ include "opentelemetry-collector.lowercase_chartname" . }}-configmap
     configMap:
       name: {{ include "opentelemetry-collector.fullname" . }}{{ .configmapSuffix }}
       items:
@@ -188,6 +185,10 @@ affinity:
 {{- end }}
 {{- with .Values.tolerations }}
 tolerations:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+{{- with .Values.topologySpreadConstraints }}
+topologySpreadConstraints:
   {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- end }}

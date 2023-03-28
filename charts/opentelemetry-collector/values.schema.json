@@ -222,6 +222,9 @@
     "affinity": {
       "type": "object"
     },
+    "topologySpreadConstraints": {
+      "type": "object"
+    },
     "priorityClassName": {
       "type": "string"
     },
@@ -306,7 +309,13 @@
             "hostPort": {
               "type": "integer"
             },
+            "nodePort": {
+              "type": "integer"
+            },
             "protocol": {
+              "type": "string"
+            },
+            "appProtocol": {
               "type": "string"
             }
           },
@@ -469,6 +478,9 @@
     "replicaCount": {
       "type": "integer"
     },
+    "revisionHistoryLimit": {
+      "type": "integer"
+    },
     "annotations": {
       "type": "object"
     },
@@ -485,6 +497,12 @@
         },
         "loadBalancerIP": {
           "type": "string"
+        },
+        "loadBalancerSourceRanges": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "annotations": {
           "type": "object"
@@ -759,7 +777,5 @@
       }
     }
   },
-  "required": [
-    "mode"
-  ]
+  "required": ["mode"]
 }

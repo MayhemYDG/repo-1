@@ -8,9 +8,6 @@ in kubernetes cluster.
 - Kubernetes 1.23+
 - Helm 3.9+
 
-Since the OpenTelemetry demo does not build images targeting arm64 architecture **the chart is not supported in clusters running on
-arm64 architectures**, such as kind/minikube running on Apple Silicon.
-
 ## Installing the Chart
 
 Add OpenTelemetry Helm repository:
@@ -25,14 +22,9 @@ To install the chart with the release name my-otel-demo, run the following comma
 helm install my-otel-demo open-telemetry/opentelemetry-demo
 ```
 
-## Upgrading Chart
+## Upgrading
 
-### To 0.13
-
-Jaeger was moved to a Helm sub-chart instead of a local chart deployment. If you
-had changes specified to the `observability.jaeger` parameter, those changes
-will need to be re-implemented as sub-chart parameters under the top level
-`jaeger` parameter instead.
+See [UPGRADING.md](UPGRADING.md).
 
 ## Chart Parameters
 
@@ -57,7 +49,9 @@ the demo
 | `default.schedulingRules.affinity`     | Man of node/pod affinities                                                                | `{}`                                                 |
 | `default.schedulingRules.tolerations`  | Tolerations for pod assignment                                                            | `[]`                                                 |
 | `default.securityContext`              | Demo components container security context                                                | `{}`                                                 |
-| `serviceAccount`                       | The name of the ServiceAccount to use for demo components                                 | `""`                                                 |
+| `serviceAccount.annotations`           | Annotations for the serviceAccount                                                        | `{}`                                                 |
+| `serviceAccount.create`                | Wether to create a serviceAccount or use an existing one                                  | `true`                                               |
+| `serviceAccount.name`                  | The name of the ServiceAccount to use for demo components                                 | `""`                                                 |
 
 ### Component parameters
 
@@ -79,7 +73,10 @@ component.
 | `imageOverride.tag`                  | Tag of the image for this component                                                                        | Defaults to the overall default image tag                     |
 | `imageOverride.pullPolicy`           | Image pull policy for this component                                                                       | `IfNotPresent`                                                |
 | `imageOverride.pullSecrets`          | Image pull secrets for this component                                                                      | `[]`                                                          |
-| `servicePort`                        | Service port used for this component                                                                       | `nil`                                                         |
+| `service.type`                       | Service type used for this component                                                                       | `ClusterIP`                                                   |
+| `service.port`                       | Service port used for this component                                                                       | `nil`                                                         |
+| `service.nodePort`                   | Service node port used for this component                                                                  | `nil`                                                         |
+| `service.annotations`                | Annotations to add to the component's service                                                              | `{}`                                                          |
 | `ports`                              | Array of ports to open for deployment and service of this component                                        | `[]`                                                          |
 | `env`                                | Array of environment variables added to this component                                                     | Each component will have its own set of environment variables |
 | `envOverrides`                       | Used to override individual environment variables without re-specifying the entire array                   | `[]`                                                          |
@@ -101,15 +98,10 @@ component.
 | `ingress.additionalIngresses[].name` | Each additional ingress rule needs to have a unique name                                                   | `nil`                                                         |
 | `command`                            | Command & arguments to pass to the container being spun up for this service                                | `[]`                                                          |
 | `configuration`                      | Configuration for the container being spun up; will create a ConfigMap, Volume and VolumeMount             | `{}`                                                          |
-
-### Observability parameters
-
-| Parameter                          | Description                                   | Default |
-|------------------------------------|-----------------------------------------------|---------|
-| `observability.otelcol.enabled`    | Enables the OpenTelemetry Collector sub-chart | `true`  |
-| `observability.jaeger.enabled`     | Enables the Jaeger sub-chart                  | `true`  |
-| `observability.prometheus.enabled` | Enables the Prometheus sub-chart              | `true`  |
-| `observability.grafana.enabled`    | Enables the Grafana sub-chart                 | `true`  |
+| `initContainers`                     | Array of init containers to add to the pod                                                                 | `[]`                                                          |
+| `initContainers[].name`              | Name of the init container                                                                                 | `nil`                                                         |
+| `initContainers[].image`             | Image to use for the init container                                                                        | `nil`                                                         |
+| `initContainers[].command`           | Command to run for the init container                                                                      | `nil`                                                         |
 
 ### Sub-charts
 
@@ -130,6 +122,7 @@ parameters by default. The overriden parameters are specified below.
 
 | Parameter        | Description                                        | Default                                                  |
 |------------------|----------------------------------------------------|----------------------------------------------------------|
+| `enabled`        | Install the OpenTelemetry collector                | `true`                                                   |
 | `nameOverride`   | Name that will be used by the sub-chart release    | `otelcol`                                                |
 | `mode`           | The Deployment or Daemonset mode                   | `deployment`                                             |
 | `resources`      | CPU/Memory resource requests/limits                | 100Mi memory limit                                       |
@@ -145,6 +138,7 @@ parameters by default. The overriden parameters are specified below.
 
 | Parameter                      | Description                                        | Default                                                               |
 |--------------------------------|----------------------------------------------------|-----------------------------------------------------------------------|
+| `enabled`                      | Install the Jaeger sub-chart                       | `true`                                                                |
 | `provisionDataStore.cassandra` | Provision a cassandra data store                   | `false` (required for AllInOne mode)                                  |
 | `allInOne.enabled`             | Enable All in One In-Memory Configuration          | `true`                                                                |
 | `allInOne.args`                | Command arguments to pass to All in One deployment | `["--memory.max-traces", "10000", "--query.base-path", "/jaeger/ui"]` |
@@ -161,11 +155,14 @@ parameters by default. The overriden parameters are specified below.
 
 | Parameter                            | Description                                    | Default                                                   |
 |--------------------------------------|------------------------------------------------|-----------------------------------------------------------|
+| `enabled`                            | Install the Prometheus sub-chart               | `true`                                                    |
 | `alertmanager.enabled`               | Install the alertmanager                       | `false`                                                   |
 | `configmapReload.prometheus.enabled` | Install the configmap-reload container         | `false`                                                   |
 | `kube-state-metrics.enabled`         | Install the kube-state-metrics sub-chart       | `false`                                                   |
 | `prometheus-node-exporter.enabled`   | Install the Prometheus Node Exporter sub-chart | `false`                                                   |
 | `prometheus-pushgateway.enabled`     | Install the Prometheus Push Gateway sub-chart  | `false`                                                   |
+| `server.extraFlags`                  | Additional flags to add to Prometheus server   | `["enable-feature=exemplar-storage"]`                     |
+| `server.persistentVolume.enabled`    | Enable persistent storage for Prometheus data  | `false`                                                   |
 | `server.global.scrape_interval`      | How frequently to scrape targets by default    | `5s`                                                      |
 | `server.global.scrap_timeout`        | How long until a scrape request times out      | `3s`                                                      |
 | `server.global.evaluation_interval`  | How frequently to evaluate rules               | `30s`                                                     |
@@ -179,8 +176,10 @@ parameters by default. The overriden parameters are specified below.
 
 | Parameter             | Description                                        | Default                                                              |
 |-----------------------|----------------------------------------------------|----------------------------------------------------------------------|
+| `enabled`             | Install the Grafana sub-chart                      | `true`                                                               |
 | `grafana.ini`         | Grafana's primary configuration                    | Enables anonymous login, and proxy through the frontendProxy service |
 | `adminPassword`       | Password used by `admin` user                      | `admin`                                                              |
+| `rbac.pspEnabled`     | Enable PodSecurityPolicy resources                 | `false`                                                              |
 | `datasources`         | Configure grafana datasources (passed through tpl) | Prometheus and Jaeger data sources                                   |
 | `dashboardProviders`  | Configure grafana dashboard providers              | Defines a `default` provider based on a file path                    |
 | `dashboardConfigMaps` | ConfigMaps reference that contains dashboards      | Dashboard config map deployed with this Helm chart                   |

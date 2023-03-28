@@ -5,6 +5,10 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
+{{- define "opentelemetry-collector.lowercase_chartname" -}}
+{{- default .Chart.Name | lower }}
+{{- end }}
+
 {{/*
 Get component name
 */}}
@@ -81,22 +85,14 @@ Create the name of the service account to use
 Create the name of the clusterRole to use
 */}}
 {{- define "opentelemetry-collector.clusterRoleName" -}}
-{{- if .Values.clusterRole.create }}
 {{- default (include "opentelemetry-collector.fullname" .) .Values.clusterRole.name }}
-{{- else }}
-{{- default "default" .Values.clusterRole.name }}
-{{- end }}
 {{- end }}
 
 {{/*
 Create the name of the clusterRoleBinding to use
 */}}
 {{- define "opentelemetry-collector.clusterRoleBindingName" -}}
-{{- if .Values.clusterRole.create }}
 {{- default (include "opentelemetry-collector.fullname" .) .Values.clusterRole.clusterRoleBinding.name }}
-{{- else }}
-{{- default "default" .Values.clusterRole.clusterRoleBinding.name }}
-{{- end }}
 {{- end }}
 
 {{- define "opentelemetry-collector.podAnnotations" -}}
