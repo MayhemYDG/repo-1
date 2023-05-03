@@ -1,5 +1,22 @@
 # Upgrade guidelines
 
+## 0.55.0 to 0.55.1
+
+As of v0.55.1 Collector chart use `${env:ENV}` style syntax when getting environment variables and that $`{env:ENV}` syntax is not supported before collector 0.71. If you upgrade collector chart to v0.55.1, you need to make sure your collector version is after than 0.71 (default is v0.76.1).
+
+## 0.53.1 to 0.54.0
+
+As of v0.54.0 Collector chart, the default resource limits are removed. If you want to keep old values you can use the following configuration:
+
+```
+resources:
+  limits:
+    cpu: 256m
+    memory: 512Mi
+```
+
+See [the 644 issue](https://github.com/open-telemetry/opentelemetry-helm-charts/issues/644) for more information.
+
 ## 0.46.0 to 0.47.0
 
 [Update Collector Endpoints to use Pod IP Instead of 0.0.0.0](https://github.com/open-telemetry/opentelemetry-helm-charts/pull/603)
@@ -10,6 +27,39 @@ To be in compliance with the Collector's security best practices the chart has b
 The chart will continue to allow complete configuration of the Collector via the `config` field in the values.yaml.  If pod IP does not suite your needs you can use `config` to set something different.
 
 See [Security Best Practices docummentation](https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/security-best-practices.md#safeguards-against-denial-of-service-attacks) for more details.
+
+The new default of binding to the pod IP, rather than `0.0.0.0`, will cause `kubectl port-forward` to fail. If port-forwarding is desired, the following `value.yaml` snippet will allow the Collector bind to `127.0.0.1` inside the pod, in addition to the pod's IP:
+
+```yaml
+config:
+  receivers:
+    jaeger/local:
+      protocols:
+        grpc:
+          endpoint: 127.0.0.1:14250
+        thrift_compact:
+          endpoint: 127.0.0.1:6831
+        thrift_http:
+          endpoint: 127.0.0.1:14268
+    otlp/local:
+      protocols:
+        grpc:
+          endpoint: 127.0.0.1:4317
+        http:
+          endpoint: 127.0.0.1:4318
+    zipkin/local:
+      endpoint: 127.0.0.1:9411
+  service:
+    pipelines:
+      traces:
+        receivers:
+        - otlp
+        - otlp/local
+        - jaeger
+        - jaeger/local
+        - zipkin
+        - zipkin/local
+```
 
 ## 0.40.7 to 0.41.0
 

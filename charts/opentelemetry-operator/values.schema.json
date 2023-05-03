@@ -68,19 +68,23 @@
                     ]
                 },
                 "minAvailable": {
-                    "type": "integer",
-                    "default": 0,
-                    "title": "The minAvailable Schema",
-                    "examples": [
-                        1
+                    "oneOf": [
+                        {
+                            "type": ["string", "null"]
+                        },
+                        {
+                            "type": ["integer", "null"]
+                        }
                     ]
                 },
                 "maxUnavailable": {
-                    "type": "string",
-                    "default": "",
-                    "title": "The maxUnavailable Schema",
-                    "examples": [
-                        ""
+                    "oneOf": [
+                        {
+                            "type": ["string", "null"]
+                        },
+                        {
+                            "type": ["integer", "null"]
+                        }
                     ]
                 }
             },
@@ -109,7 +113,8 @@
                 "prometheusRule",
                 "extraArgs",
                 "leaderElection",
-                "verticalPodAutoscaler"
+                "verticalPodAutoscaler",
+                "rolling"
             ],
             "properties": {
                 "image": {
@@ -134,13 +139,13 @@
                             "default": "",
                             "title": "The tag Schema",
                             "examples": [
-                                "v0.73.0"
+                                "v0.75.0"
                             ]
                         }
                     },
                     "examples": [{
                         "repository": "ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator",
-                        "tag": "v0.73.0"
+                        "tag": "v0.75.0"
                     }]
                 },
                 "collectorImage": {
@@ -165,13 +170,13 @@
                             "default": "",
                             "title": "The tag Schema",
                             "examples": [
-                                "0.74.0"
+                                "0.75.0"
                             ]
                         }
                     },
                     "examples": [{
                         "repository": "otel/opentelemetry-collector-contrib",
-                        "tag": "0.74.0"
+                        "tag": "0.75.0"
                     }]
                 },
                 "targetAllocatorImage": {
@@ -785,7 +790,8 @@
                             "default": {},
                             "title": "The updatePolicy Schema",
                             "required": [
-                                "updateMode"
+                                "updateMode",
+                                "minReplicas"
                             ],
                             "properties": {
                                 "updateMode": {
@@ -795,10 +801,19 @@
                                     "examples": [
                                         "Auto"
                                     ]
+                                },
+                                "minReplicas": {
+                                    "type": "integer",
+                                    "default": 2,
+                                    "title": "The minReplicas Schema",
+                                    "examples": [
+                                        2
+                                    ]
                                 }
                             },
                             "examples": [{
-                                "updateMode": "Auto"
+                                "updateMode": "Auto",
+                                "minReplicas": 2
                             }]
                         }
                     },
@@ -808,19 +823,28 @@
                         "maxAllowed": {},
                         "minAllowed": {},
                         "updatePolicy": {
-                            "updateMode": "Auto"
+                            "updateMode": "Auto",
+                            "minReplicas": 2
                         }
                     }]
+                },
+                "rolling": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The rolling Schema",
+                    "examples": [
+                        false
+                    ]
                 }
             },
             "examples": [{
                 "image": {
                     "repository": "ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator",
-                    "tag": "v0.73.0"
+                    "tag": "v0.75.0"
                 },
                 "collectorImage": {
                     "repository": "otel/opentelemetry-collector-contrib",
-                    "tag": "0.74.0"
+                    "tag": "0.75.0"
                 },
                 "targetAllocatorImage": {
                     "repository": "",
@@ -895,9 +919,11 @@
                     "maxAllowed": {},
                     "minAllowed": {},
                     "updatePolicy": {
-                        "updateMode": "Auto"
+                        "updateMode": "Auto",
+                        "minReplicas": 2
                     }
-                }
+                },
+                "rolling": false
             }]
         },
         "kubeRBACProxy": {
@@ -934,7 +960,7 @@
                             "default": "",
                             "title": "The repository Schema",
                             "examples": [
-                                "gcr.io/kubebuilder/kube-rbac-proxy"
+                                "quay.io/brancz/kube-rbac-proxy"
                             ]
                         },
                         "tag": {
@@ -942,13 +968,13 @@
                             "default": "",
                             "title": "The tag Schema",
                             "examples": [
-                                "v0.14.0"
+                                "v0.14.1"
                             ]
                         }
                     },
                     "examples": [{
-                        "repository": "gcr.io/kubebuilder/kube-rbac-proxy",
-                        "tag": "v0.14.0"
+                        "repository": "quay.io/brancz/kube-rbac-proxy",
+                        "tag": "v0.14.1"
                     }]
                 },
                 "ports": {
@@ -1068,8 +1094,8 @@
             "examples": [{
                 "enabled": true,
                 "image": {
-                    "repository": "gcr.io/kubebuilder/kube-rbac-proxy",
-                    "tag": "v0.14.0"
+                    "repository": "quay.io/brancz/kube-rbac-proxy",
+                    "tag": "v0.14.1"
                 },
                 "ports": {
                     "proxyPort": 8443
@@ -1131,8 +1157,7 @@
                     "default": "",
                     "title": "The namePrefix Schema",
                     "examples": [
-                        "10",
-                        "99"
+                        ""
                     ]
                 },
                 "timeoutSeconds": {
@@ -1165,7 +1190,9 @@
                     "title": "The certManager Schema",
                     "required": [
                         "enabled",
-                        "issuerRef"
+                        "issuerRef",
+                        "certificateAnnotations",
+                        "issuerAnnotations"
                     ],
                     "properties": {
                         "enabled": {
@@ -1183,11 +1210,29 @@
                             "required": [],
                             "properties": {},
                             "examples": [{}]
+                        },
+                        "certificateAnnotations": {
+                          "type": "object",
+                          "default": {},
+                          "title": "The certificateAnnotations Schema",
+                          "required": [],
+                          "properties": {},
+                          "examples": [{}]
+                        },
+                        "issuerAnnotations": {
+                          "type": "object",
+                          "default": {},
+                          "title": "The issuerAnnotations Schema",
+                          "required": [],
+                          "properties": {},
+                          "examples": [{}]
                         }
                     },
                     "examples": [{
                         "enabled": true,
-                        "issuerRef": {}
+                        "issuerRef": {},
+                        "certificateAnnotations": {},
+                        "issuerAnnotations": {}
                     }]
                 }
             },
@@ -1195,12 +1240,15 @@
                 "create": true,
                 "failurePolicy": "Fail",
                 "secretName": "",
+                "namePrefix": "",
                 "timeoutSeconds": 10,
                 "namespaceSelector": {},
                 "objectSelector": {},
                 "certManager": {
                     "enabled": true,
-                    "issuerRef": {}
+                    "issuerRef": {},
+                    "certificateAnnotations": {},
+                    "issuerAnnotations": {}
                 }
             }]
         },
@@ -1407,11 +1455,11 @@
         "manager": {
             "image": {
                 "repository": "ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator",
-                "tag": "v0.73.0"
+                "tag": "v0.75.0"
             },
             "collectorImage": {
                 "repository": "otel/opentelemetry-collector-contrib",
-                "tag": "0.74.0"
+                "tag": "0.75.0"
             },
             "targetAllocatorImage": {
                 "repository": "",
@@ -1486,15 +1534,17 @@
                 "maxAllowed": {},
                 "minAllowed": {},
                 "updatePolicy": {
-                    "updateMode": "Auto"
+                    "updateMode": "Auto",
+                    "minReplicas": 2
                 }
-            }
+            },
+            "rolling": false
         },
         "kubeRBACProxy": {
             "enabled": true,
             "image": {
-                "repository": "gcr.io/kubebuilder/kube-rbac-proxy",
-                "tag": "v0.14.0"
+                "repository": "quay.io/brancz/kube-rbac-proxy",
+                "tag": "v0.14.1"
             },
             "ports": {
                 "proxyPort": 8443
@@ -1515,12 +1565,15 @@
             "create": true,
             "failurePolicy": "Fail",
             "secretName": "",
+            "namePrefix": "",
             "timeoutSeconds": 10,
             "namespaceSelector": {},
             "objectSelector": {},
             "certManager": {
                 "enabled": true,
-                "issuerRef": {}
+                "issuerRef": {},
+                "certificateAnnotations": {},
+                "issuerAnnotations": {}
             }
         },
         "role": {

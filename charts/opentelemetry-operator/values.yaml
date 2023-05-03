@@ -29,10 +29,10 @@ pdb:
 manager:
   image:
     repository: ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator
-    tag: v0.73.0
+    tag: v0.75.0
   collectorImage:
     repository: otel/opentelemetry-collector-contrib
-    tag: 0.74.0
+    tag: 0.75.0
   targetAllocatorImage:
     repository: ""
     tag: ""
@@ -124,14 +124,19 @@ manager:
       # Specifies whether recommended updates are applied when a Pod is started and whether recommended updates
       # are applied during the life of a Pod. Possible values are "Off", "Initial", "Recreate", and "Auto".
       updateMode: Auto
+      # Minimal number of replicas which need to be alive for Updater to attempt pod eviction.
+      # Only positive values are allowed. The default is 2.
+      minReplicas: 2
+  # Enable manager pod automatically rolling
+  rolling: false
 
 ## Provide OpenTelemetry Operator kube-rbac-proxy container image.
 ##
 kubeRBACProxy:
   enabled: true
   image:
-    repository: gcr.io/kubebuilder/kube-rbac-proxy
-    tag: v0.14.0
+    repository: quay.io/brancz/kube-rbac-proxy
+    tag: v0.14.1
   ports:
     proxyPort: 8443
   resources:
@@ -172,6 +177,9 @@ admissionWebhooks:
     issuerRef: {}
       # kind:
       # name:
+    # Annotations for the cert and issuer if cert-manager is enabled.
+    certificateAnnotations: {}
+    issuerAnnotations: {}
 
 ## Create the provided Roles and RoleBindings
 ##

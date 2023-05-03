@@ -25,11 +25,14 @@ spec:
   targetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ template "opentelemetry-operator.fullname" . }}-operator
+    name: {{ template "opentelemetry-operator.fullname" . }}
   {{- if .Values.manager.verticalPodAutoscaler.updatePolicy }}
   updatePolicy:
     {{- if .Values.manager.verticalPodAutoscaler.updatePolicy.updateMode }}
-    updateMode: {{ .Values.manager.verticalPodAutoscaler.updatePolicy.updateMode  }}
+    updateMode: {{ .Values.manager.verticalPodAutoscaler.updatePolicy.updateMode }}
+    {{- end }}
+    {{- if .Values.manager.verticalPodAutoscaler.updatePolicy.minReplicas }}
+    minReplicas: {{ .Values.manager.verticalPodAutoscaler.updatePolicy.minReplicas }}
     {{- end }}
   {{- end }}
 {{- end }}
