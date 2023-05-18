@@ -9,14 +9,25 @@ metadata:
   annotations:
     "helm.sh/hook": "pre-install,pre-upgrade"
     "helm.sh/hook-delete-policy": "before-hook-creation"
+    {{- if .Values.admissionWebhooks.secretAnnotations }}
+    {{- toYaml .Values.admissionWebhooks.secretAnnotations | nindent 4 }}
+    {{- end }}
   labels:
     {{- include "opentelemetry-operator.labels" . | nindent 4 }}
     app.kubernetes.io/component: webhook
+    {{- if .Values.admissionWebhooks.secretLabels }}
+    {{- toYaml .Values.admissionWebhooks.secretLabels | nindent 4 }}
+    {{- end }}
   name: {{ default (printf "%s-controller-manager-service-cert" (include "opentelemetry-operator.fullname" .)) .Values.admissionWebhooks.secretName }}
   namespace: {{ .Release.Namespace }}
 data:
+  {{- if .Values.admissionWebhooks.autoGenerateCert }}
   tls.crt: {{ $cert.Cert | b64enc }}
   tls.key: {{ $cert.Key | b64enc }}
+  {{- else }}
+  tls.crt: {{ .Values.admissionWebhooks.cert_file | b64enc }}
+  tls.key: {{ .Values.admissionWebhooks.key_file | b64enc }}
+  {{- end }}
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
@@ -29,7 +40,11 @@ webhooks:
   - admissionReviewVersions:
       - v1
     clientConfig:
+      {{- if .Values.admissionWebhooks.autoGenerateCert }}
       caBundle: {{ $ca.Cert | b64enc }}
+      {{- else }}
+      caBundle: {{ .Values.admissionWebhooks.ca_file | b64enc }}
+      {{- end }}
       service:
         name: {{ template "opentelemetry-operator.fullname" . }}-webhook
         namespace: {{ .Release.Namespace }}
@@ -59,7 +74,11 @@ webhooks:
   - admissionReviewVersions:
       - v1
     clientConfig:
+      {{- if .Values.admissionWebhooks.autoGenerateCert }}
       caBundle: {{ $ca.Cert | b64enc }}
+      {{- else }}
+      caBundle: {{ .Values.admissionWebhooks.ca_file | b64enc }}
+      {{- end }}
       service:
         name: {{ template "opentelemetry-operator.fullname" . }}-webhook
         namespace: {{ .Release.Namespace }}
@@ -89,7 +108,11 @@ webhooks:
   - admissionReviewVersions:
       - v1
     clientConfig:
+      {{- if .Values.admissionWebhooks.autoGenerateCert }}
       caBundle: {{ $ca.Cert | b64enc }}
+      {{- else }}
+      caBundle: {{ .Values.admissionWebhooks.ca_file | b64enc }}
+      {{- end }}
       service:
         name: {{ template "opentelemetry-operator.fullname" . }}-webhook
         namespace: {{ .Release.Namespace }}
@@ -130,7 +153,11 @@ webhooks:
   - admissionReviewVersions:
       - v1
     clientConfig:
+      {{- if .Values.admissionWebhooks.autoGenerateCert }}
       caBundle: {{ $ca.Cert | b64enc }}
+      {{- else }}
+      caBundle: {{ .Values.admissionWebhooks.ca_file | b64enc }}
+      {{- end }}
       service:
         name: {{ template "opentelemetry-operator.fullname" . }}-webhook
         namespace: {{ .Release.Namespace }}
@@ -160,7 +187,11 @@ webhooks:
   - admissionReviewVersions:
       - v1
     clientConfig:
+      {{- if .Values.admissionWebhooks.autoGenerateCert }}
       caBundle: {{ $ca.Cert | b64enc }}
+      {{- else }}
+      caBundle: {{ .Values.admissionWebhooks.ca_file | b64enc }}
+      {{- end }}
       service:
         name: {{ template "opentelemetry-operator.fullname" . }}-webhook
         namespace: {{ .Release.Namespace }}
@@ -189,7 +220,11 @@ webhooks:
   - admissionReviewVersions:
       - v1
     clientConfig:
+      {{- if .Values.admissionWebhooks.autoGenerateCert }}
       caBundle: {{ $ca.Cert | b64enc }}
+      {{- else }}
+      caBundle: {{ .Values.admissionWebhooks.ca_file | b64enc }}
+      {{- end }}
       service:
         name: {{ template "opentelemetry-operator.fullname" . }}-webhook
         namespace: {{ .Release.Namespace }}
@@ -219,7 +254,11 @@ webhooks:
   - admissionReviewVersions:
       - v1
     clientConfig:
+      {{- if .Values.admissionWebhooks.autoGenerateCert }}
       caBundle: {{ $ca.Cert | b64enc }}
+      {{- else }}
+      caBundle: {{ .Values.admissionWebhooks.ca_file | b64enc }}
+      {{- end }}
       service:
         name: {{ template "opentelemetry-operator.fullname" . }}-webhook
         namespace: {{ .Release.Namespace }}

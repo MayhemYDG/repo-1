@@ -29,10 +29,10 @@ pdb:
 manager:
   image:
     repository: ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator
-    tag: v0.75.0
+    tag: v0.76.1
   collectorImage:
     repository: otel/opentelemetry-collector-contrib
-    tag: 0.75.0
+    tag: 0.76.1
   targetAllocatorImage:
     repository: ""
     tag: ""
@@ -130,6 +130,14 @@ manager:
   # Enable manager pod automatically rolling
   rolling: false
 
+  ## Container specific securityContext
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    # capabilities:
+    #   drop:
+    #   - ALL
+
 ## Provide OpenTelemetry Operator kube-rbac-proxy container image.
 ##
 kubeRBACProxy:
@@ -151,6 +159,14 @@ kubeRBACProxy:
   ## for example: --tls-cipher-suites, --tls-min-version, etc.
   extraArgs: []
 
+  ## Container specific securityContext
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+  securityContext: {}
+    # allowPrivilegeEscalation: false
+    # capabilities:
+    #   drop:
+    #   - ALL
+
 ## Admission webhooks make sure only requests with correctly formatted rules will get into the Operator.
 ## They also enable the sidecar injection for OpenTelemetryCollector and Instrumentation CR's
 admissionWebhooks:
@@ -169,17 +185,38 @@ admissionWebhooks:
   namespaceSelector: {}
   objectSelector: {}
 
-  ## Provide the issuer kind and name to do the cert auth job.
-  ## By default, OpenTelemetry Operator will use self-signer issuer.
+  ## https://github.com/open-telemetry/opentelemetry-helm-charts/blob/main/charts/opentelemetry-operator/README.md#tls-certificate-requirement
+  ## TLS Certificate Option 1: Use certManager to generate self-signed certificate.
+  ## certManager must be enabled. If enabled, always takes precendence over options 2 and 3.
   certManager:
-    # false means helm will create self-signd cert and secret for you.
     enabled: true
+    ## Provide the issuer kind and name to do the cert auth job.
+    ## By default, OpenTelemetry Operator will use self-signer issuer.
     issuerRef: {}
       # kind:
       # name:
-    # Annotations for the cert and issuer if cert-manager is enabled.
+    ## Annotations for the cert and issuer if cert-manager is enabled.
     certificateAnnotations: {}
     issuerAnnotations: {}
+
+  ## TLS Certificate Option 2: Use Helm to automatically generate self-signed certificate.
+  ## certManager must be disabled and autoGenerateCert must be enabled.
+  ## If true and certManager.enabled is false, Helm will automatically create a self-signd cert and secret for you.
+  autoGenerateCert: true
+
+  ## TLS Certificate Option 3: Use your own self-signed certificate.
+  ## certManager and autoGenerateCert must be disabled and cert_file, key_file, and ca_file must be set.
+  ## Path to your own PEM-encoded certificate.
+  cert_file: ""
+  ## Path to your own PEM-encoded private key.
+  key_file: ""
+  ## Path to the CA cert.
+  ca_file: ""
+
+  ## Secret annotations
+  secretAnnotations: {}
+  ## Secret labels
+  secretLabels: {}
 
 ## Create the provided Roles and RoleBindings
 ##
