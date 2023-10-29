@@ -4,11 +4,13 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    component: "server"
-    app: prometheus
-    release: example
-    chart: prometheus-20.2.0
-    heritage: Helm
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: prometheus
+    app.kubernetes.io/instance: example
+    app.kubernetes.io/version: v2.47.0
+    helm.sh/chart: prometheus-25.1.0
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/part-of: prometheus
   name: example-prometheus-server
 rules:
   - apiGroups:
@@ -32,6 +34,14 @@ rules:
     resources:
       - ingresses/status
       - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "discovery.k8s.io"
+    resources:
+      - endpointslices
     verbs:
       - get
       - list
