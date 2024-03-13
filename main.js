@@ -23,14 +23,6 @@ function getText(textOrFile, convertMarkdown) {
     return text
 }
 
-function getFrom(from, username) {
-    if (from.match(/.+ <.+@.+>/)) {
-        return from
-    }
-
-    return `"${from}" <${username}>`
-}
-
 async function getAttachments(attachments) {
     const globber = await glob.create(attachments.split(',').join('\n'))
     const files = await globber.glob()
@@ -128,7 +120,7 @@ async function main() {
         while (true) {
             try {
                 const info = await transport.sendMail({
-                    from: getFrom(from, username),
+                    from: from,
                     to: to,
                     subject: getText(subject, false),
                     cc: cc ? cc : undefined,
