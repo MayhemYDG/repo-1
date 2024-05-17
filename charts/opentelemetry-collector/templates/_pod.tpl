@@ -6,11 +6,18 @@ imagePullSecrets:
 serviceAccountName: {{ include "opentelemetry-collector.serviceAccountName" . }}
 securityContext:
   {{- toYaml .Values.podSecurityContext | nindent 2 }}
+{{- with .Values.hostAliases }}
+hostAliases:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
 containers:
   - name: {{ include "opentelemetry-collector.lowercase_chartname" . }}
+    {{- if .Values.command.name }}
     command:
       - /{{ .Values.command.name }}
-      {{- if .Values.configMap.create }}
+    {{- end }}
+    args:
+      {{- if or .Values.configMap.create .Values.configMap.existingName }}
       - --config=/conf/relay.yaml
       {{- end }}
       {{- range .Values.command.extraArgs }}
@@ -24,12 +31,12 @@ containers:
       {{- toYaml .Values.securityContext | nindent 6 }}
       {{- end }}
     {{- if .Values.image.digest }}
-    image: "{{ .Values.image.repository }}@{{ .Values.image.digest }}"
+    image: "{{ ternary "" (print (.Values.global).imageRegistry "/") (empty (.Values.global).imageRegistry) }}{{ .Values.image.repository }}@{{ .Values.image.digest }}"
     {{- else }}
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+    image: "{{ ternary "" (print (.Values.global).imageRegistry "/") (empty (.Values.global).imageRegistry) }}{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
     {{- end }}
     imagePullPolicy: {{ .Values.image.pullPolicy }}
-    
+
     {{- $ports := include "opentelemetry-collector.podPortsConfig" . }}
     {{- if $ports }}
     ports:
@@ -49,7 +56,7 @@ containers:
       {{- end }}
       {{- if and (.Values.useGOMEMLIMIT) ((((.Values.resources).limits).memory))  }}
       - name: GOMEMLIMIT
-        value: {{ div (mul (include "opentelemetry-collector.convertMemToMib" .Values.resources.limits.memory) 80) 100 }}MiB
+        value: {{ include "opentelemetry-collector.gomemlimit" .Values.resources.limits.memory | quote }}
       {{- end }}
       {{- with .Values.extraEnvs }}
       {{- . | toYaml | nindent 6 }}
@@ -105,7 +112,7 @@ containers:
       {{- toYaml . | nindent 6 }}
     {{- end }}
     volumeMounts:
-      {{- if .Values.configMap.create }}
+      {{- if or .Values.configMap.create .Values.configMap.existingName }}
       - mountPath: /conf
         name: {{ include "opentelemetry-collector.lowercase_chartname" . }}-configmap
       {{- end }}
@@ -130,8 +137,8 @@ containers:
       {{- if .Values.extraVolumeMounts }}
       {{- toYaml .Values.extraVolumeMounts | nindent 6 }}
       {{- end }}
-{{- with .Values.extraContainers }}
-{{- toYaml . | nindent 2 }}
+{{- if .Values.extraContainers }}
+  {{- tpl (toYaml .Values.extraContainers) . | nindent 2 }}
 {{- end }}
 {{- if .Values.initContainers }}
 initContainers:
@@ -141,10 +148,10 @@ initContainers:
 priorityClassName: {{ .Values.priorityClassName | quote }}
 {{- end }}
 volumes:
-  {{- if .Values.configMap.create }}
+  {{- if or .Values.configMap.create .Values.configMap.existingName }}
   - name: {{ include "opentelemetry-collector.lowercase_chartname" . }}-configmap
     configMap:
-      name: {{ include "opentelemetry-collector.fullname" . }}{{ .configmapSuffix }}
+      name: {{ include "opentelemetry-collector.configName" . }}
       items:
         - key: relay
           path: relay.yaml

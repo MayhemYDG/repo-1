@@ -41,6 +41,7 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{ include "opentelemetry-operator.additionalLabels" . }}
 {{- end }}
 
 {{/*
@@ -73,6 +74,12 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
+{{- define "opentelemetry-operator.additionalLabels" -}}
+{{- if .Values.additionalLabels }}
+{{- tpl (.Values.additionalLabels | toYaml) . }}
+{{- end }}
+{{- end }}
+
 {{/*
 Create an ordered name of the MutatingWebhookConfiguration
 */}}
@@ -97,7 +104,9 @@ a cert is loaded from an existing secret or is provided via `.Values`
 {{- $caCertEnc = index $prevSecret "data" "ca.crt" }}
 {{- if not $caCertEnc }}
 {{- $prevHook := (lookup "admissionregistration.k8s.io/v1" "MutatingWebhookConfiguration" .Release.Namespace (print (include "opentelemetry-operator.MutatingWebhookName" . ) "-mutation")) }}
+{{- if not (eq (toString $prevHook) "<nil>") }}
 {{- $caCertEnc = (first $prevHook.webhooks).clientConfig.caBundle }}
+{{- end }}
 {{- end }}
 {{- else }}
 {{- $altNames := list ( printf "%s-webhook.%s" (include "opentelemetry-operator.fullname" .) .Release.Namespace ) ( printf "%s-webhook.%s.svc" (include "opentelemetry-operator.fullname" .) .Release.Namespace ) -}}
@@ -108,10 +117,35 @@ a cert is loaded from an existing secret or is provided via `.Values`
 {{- $caCertEnc = b64enc $ca.Cert }}
 {{- end }}
 {{- else }}
-{{- $certCrtEnc = b64enc .Values.admissionWebhooks.cert_file }}
-{{- $certKeyEnc = b64enc .Values.admissionWebhooks.key_file }}
-{{- $caCertEnc = b64enc .Values.admissionWebhooks.ca_file }}
+{{- $certCrtEnc = .Files.Get .Values.admissionWebhooks.certFile | b64enc }}
+{{- $certKeyEnc = .Files.Get .Values.admissionWebhooks.keyFile | b64enc }}
+{{- $caCertEnc = .Files.Get .Values.admissionWebhooks.caFile | b64enc }}
 {{- end }}
 {{- $result := dict "crt" $certCrtEnc "key" $certKeyEnc "ca" $caCertEnc }}
 {{- $result | toYaml }}
+{{- end }}
+
+{{/*
+Return the name of cert-manager's Certificate resources for webhooks.
+*/}}
+{{- define "opentelemetry-operator.webhookCertName" -}}
+{{ template "opentelemetry-operator.fullname" . }}-serving-cert
+{{- end }}
+
+{{/*
+Return the name of the cert-manager.io/inject-ca-from annotation for webhooks and CRDs.
+*/}}
+{{- define "opentelemetry-operator.webhookCertAnnotation" -}}
+{{- if not .Values.admissionWebhooks.certManager.enabled }}
+{{- "none" }}
+{{- else }}
+{{- printf "%s/%s" .Release.Namespace (include "opentelemetry-operator.webhookCertName" .) }}
+{{- end }}
+{{- end }}
+
+{{/*
+The image to use for opentelemetry-operator.
+*/}}
+{{- define "opentelemetry-operator.image" -}}
+{{- printf "%s:%s" .Values.manager.image.repository (default .Chart.AppVersion .Values.manager.image.tag) }}
 {{- end }}

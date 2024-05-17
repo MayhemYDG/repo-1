@@ -1,6 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  {{- with .Values.manager.deploymentAnnotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   labels:
     {{- include "opentelemetry-operator.labels" . | nindent 4 }}
     app.kubernetes.io/component: controller-manager
@@ -70,6 +74,9 @@ spec:
             {{- if .Values.manager.featureGates }}
             - --feature-gates={{ .Values.manager.featureGates }}
             {{- end }}
+            {{- if .Values.manager.createRbacPermissions }}
+            - --create-rbac-permissions
+            {{- end }}
             {{-  if .Values.manager.extraArgs  }}
             {{- .Values.manager.extraArgs | toYaml | nindent 12 }}
             {{-  end  }}
@@ -82,7 +89,7 @@ spec:
               value: {{ $value | quote -}}
             {{- end }}
           {{- end }}
-          image: "{{ .Values.manager.image.repository }}:{{ .Values.manager.image.tag }}"
+          image: {{ include "opentelemetry-operator.image" . | quote }}
           name: manager
           ports:
             - containerPort: {{ .Values.manager.ports.metricsPort }}

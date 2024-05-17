@@ -8,10 +8,12 @@
         "replicaCount",
         "nameOverride",
         "imagePullSecrets",
+        "clusterDomain",
         "pdb",
         "manager",
         "kubeRBACProxy",
         "admissionWebhooks",
+        "crds",
         "role",
         "clusterRole",
         "affinity",
@@ -21,9 +23,18 @@
         "hostNetwork",
         "priorityClassName",
         "securityContext",
-        "testFramework"
+        "testFramework",
+        "additionalLabels"
     ],
+    "additionalProperties": false,
     "properties": {
+        "enabled": {
+            "description": "Usually used when using Opentelemetry-operator as a subchart.",
+            "type": "boolean"
+        },
+        "global": {
+            "type": "object"
+        },
         "replicaCount": {
             "type": "integer",
             "default": 0,
@@ -40,6 +51,14 @@
                 ""
             ]
         },
+        "fullnameOverride": {
+            "type": "string",
+            "default": "",
+            "title": "The fullnameOverride Schema",
+            "examples": [
+                ""
+            ]
+        },
         "imagePullSecrets": {
             "type": "array",
             "default": [],
@@ -48,6 +67,11 @@
             "examples": [
                 []
             ]
+        },
+        "clusterDomain": {
+            "type": "string",
+            "default": "cluster.local",
+            "title": "Kubernetes cluster domain suffix"
         },
         "pdb": {
             "type": "object",
@@ -58,6 +82,7 @@
                 "minAvailable",
                 "maxUnavailable"
             ],
+            "additionalProperties": false,
             "properties": {
                 "create": {
                     "type": "boolean",
@@ -110,6 +135,8 @@
                 "env",
                 "serviceAccount",
                 "serviceMonitor",
+                "deploymentAnnotations",
+                "serviceAnnotations",
                 "podAnnotations",
                 "podLabels",
                 "prometheusRule",
@@ -119,6 +146,7 @@
                 "rolling",
                 "securityContext"
             ],
+            "additionalProperties": false,
             "properties": {
                 "image": {
                     "type": "object",
@@ -128,6 +156,7 @@
                         "repository",
                         "tag"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "repository": {
                             "type": "string",
@@ -142,13 +171,13 @@
                             "default": "",
                             "title": "The tag Schema",
                             "examples": [
-                                "v0.89.0"
+                                "v0.93.0"
                             ]
                         }
                     },
                     "examples": [{
                         "repository": "ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator",
-                        "tag": "v0.89.0"
+                        "tag": "v0.93.0"
                     }]
                 },
                 "collectorImage": {
@@ -159,6 +188,7 @@
                         "repository",
                         "tag"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "repository": {
                             "type": "string",
@@ -173,13 +203,13 @@
                             "default": "",
                             "title": "The tag Schema",
                             "examples": [
-                                "0.89.0"
+                                "0.93.0"
                             ]
                         }
                     },
                     "examples": [{
                         "repository": "otel/opentelemetry-collector-contrib",
-                        "tag": "0.89.0"
+                        "tag": "0.93.0"
                     }]
                 },
                 "opampBridgeImage": {
@@ -190,6 +220,7 @@
                         "repository",
                         "tag"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "repository": {
                             "type": "string",
@@ -221,6 +252,7 @@
                         "repository",
                         "tag"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "repository": {
                             "type": "string",
@@ -255,6 +287,7 @@
                         "dotnet",
                         "go"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "java": {
                             "type": "object",
@@ -264,6 +297,7 @@
                                 "repository",
                                 "tag"
                             ],
+                            "additionalProperties": false,
                             "properties": {
                                 "repository": {
                                     "type": "string",
@@ -295,6 +329,7 @@
                                 "repository",
                                 "tag"
                             ],
+                            "additionalProperties": false,
                             "properties": {
                                 "repository": {
                                     "type": "string",
@@ -326,6 +361,7 @@
                                 "repository",
                                 "tag"
                             ],
+                            "additionalProperties": false,
                             "properties": {
                                 "repository": {
                                     "type": "string",
@@ -357,6 +393,7 @@
                                 "repository",
                                 "tag"
                             ],
+                            "additionalProperties": false,
                             "properties": {
                                 "repository": {
                                     "type": "string",
@@ -388,6 +425,7 @@
                                 "repository",
                                 "tag"
                             ],
+                            "additionalProperties": false,
                             "properties": {
                                 "repository": {
                                     "type": "string",
@@ -452,6 +490,7 @@
                         "webhookPort",
                         "healthzPort"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "metricsPort": {
                             "type": "integer",
@@ -492,12 +531,14 @@
                         "limits",
                         "requests"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "limits": {
                             "type": "object",
                             "default": {},
                             "title": "The limits Schema",
                             "required": [],
+                            "additionalProperties": false,
                             "properties": {
                                 "cpu": {
                                     "type": "string",
@@ -514,6 +555,14 @@
                                     "examples": [
                                         "128Mi"
                                     ]
+                                },
+                                "ephemeral-storage": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The ephemeral-storage Schema",
+                                    "examples": [
+                                        "50Mi"
+                                    ]
                                 }
                             },
                             "examples": [{
@@ -529,6 +578,7 @@
                                 "cpu",
                                 "memory"
                             ],
+                            "additionalProperties": false,
                             "properties": {
                                 "cpu": {
                                     "type": "string",
@@ -544,6 +594,14 @@
                                     "title": "The memory Schema",
                                     "examples": [
                                         "64Mi"
+                                    ]
+                                },
+                                "ephemeral-storage": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The ephemeral-storage Schema",
+                                    "examples": [
+                                        "50Mi"
                                     ]
                                 }
                             },
@@ -568,18 +626,8 @@
                     "type": "object",
                     "default": {},
                     "title": "The env Schema",
-                    "required": [
-                        "ENABLE_WEBHOOKS"
-                    ],
-                    "properties": {
-                        "ENABLE_WEBHOOKS": {
-                            "type": "string",
-                            "default": "",
-                            "title": "The ENABLE_WEBHOOKS Schema",
-                            "examples": [
-                                "true"
-                            ]
-                        }
+                    "additionalProperties": {
+                      "type": "string"
                     },
                     "examples": [{
                         "ENABLE_WEBHOOKS": "true"
@@ -593,6 +641,7 @@
                         "create",
                         "annotations"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "create": {
                             "type": "boolean",
@@ -609,6 +658,14 @@
                             "required": [],
                             "properties": {},
                             "examples": [{}]
+                        },
+                        "name": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The name of the service account",
+                            "examples": [
+                                "opentelemetry-operator"
+                            ]
                         }
                     },
                     "examples": [{
@@ -626,6 +683,7 @@
                         "annotations",
                         "metricsEndpoints"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "enabled": {
                             "type": "boolean",
@@ -662,6 +720,7 @@
                                 "required": [
                                     "port"
                                 ],
+                                "additionalProperties": false,
                                 "properties": {
                                     "port": {
                                         "type": "string",
@@ -692,6 +751,22 @@
                         }]
                     }]
                 },
+                "deploymentAnnotations": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The deploymentAnnotations Schema",
+                    "required": [],
+                    "properties": {},
+                    "examples": [{}]
+                },
+                "serviceAnnotations": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The serviceAnnotations Schema",
+                    "required": [],
+                    "properties": {},
+                    "examples": [{}]
+                },
                 "podAnnotations": {
                     "type": "object",
                     "default": {},
@@ -719,6 +794,7 @@
                         "extraLabels",
                         "annotations"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "enabled": {
                             "type": "boolean",
@@ -744,6 +820,7 @@
                             "required": [
                                 "enabled"
                             ],
+                            "additionalProperties": false,
                             "properties": {
                                 "enabled": {
                                     "type": "boolean",
@@ -785,6 +862,14 @@
                         "annotations": {}
                     }]
                 },
+                "createRbacPermissions": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "Whether the operator should create RBAC permissions for collector deployments",
+                    "examples": [
+                        false
+                    ]
+                },
                 "extraArgs": {
                     "type": "array",
                     "default": [],
@@ -801,6 +886,7 @@
                     "required": [
                         "enabled"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "enabled": {
                             "type": "boolean",
@@ -826,6 +912,7 @@
                         "minAllowed",
                         "updatePolicy"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "enabled": {
                             "type": "boolean",
@@ -923,11 +1010,11 @@
             "examples": [{
                 "image": {
                     "repository": "ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator",
-                    "tag": "v0.89.0"
+                    "tag": "v0.93.0"
                 },
                 "collectorImage": {
                     "repository": "otel/opentelemetry-collector-contrib",
-                    "tag": "0.89.0"
+                    "tag": "0.93.0"
                 },
                 "opampBridgeImage": {
                     "repository": "",
@@ -1031,6 +1118,7 @@
                 "extraArgs",
                 "securityContext"
             ],
+            "additionalProperties": false,
             "properties": {
                 "enabled": {
                     "type": "boolean",
@@ -1048,6 +1136,7 @@
                         "repository",
                         "tag"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "repository": {
                             "type": "string",
@@ -1078,6 +1167,7 @@
                     "required": [
                         "proxyPort"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "proxyPort": {
                             "type": "integer",
@@ -1100,12 +1190,14 @@
                         "limits",
                         "requests"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "limits": {
                             "type": "object",
                             "default": {},
                             "title": "The limits Schema",
                             "required": [],
+                            "additionalProperties": false,
                             "properties": {
                                 "cpu": {
                                     "type": "string",
@@ -1137,6 +1229,7 @@
                                 "cpu",
                                 "memory"
                             ],
+                            "additionalProperties": false,
                             "properties": {
                                 "cpu": {
                                     "type": "string",
@@ -1228,12 +1321,14 @@
                 "objectSelector",
                 "certManager",
                 "autoGenerateCert",
-                "cert_file",
-                "key_file",
-                "ca_file",
+                "certFile",
+                "keyFile",
+                "caFile",
+                "serviceAnnotations",
                 "secretAnnotations",
                 "secretLabels"
             ],
+            "additionalProperties": false,
             "properties": {
                 "create": {
                     "type": "boolean",
@@ -1274,6 +1369,7 @@
                     "required": [
                         "failurePolicy"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "failurePolicy": {
                             "type": "string",
@@ -1330,6 +1426,7 @@
                         "certificateAnnotations",
                         "issuerAnnotations"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "enabled": {
                             "type": "boolean",
@@ -1379,6 +1476,7 @@
                         "enabled",
                         "recreate"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "enabled": {
                             "type": "boolean",
@@ -1402,29 +1500,37 @@
                         "recreate": true
                     }]
                 },
-                "cert_file": {
+                "certFile": {
                     "type": "string",
                     "default": "",
-                    "title": "The cert_file Schema",
+                    "title": "File path to self-managed TLS certificate.",
                     "examples": [
                         ""
                     ]
                 },
-                "key_file": {
+                "keyFile": {
                     "type": "string",
                     "default": "",
-                    "title": "The key_file Schema",
+                    "title": "File path to self-managed TLS key.",
                     "examples": [
                         ""
                     ]
                 },
-                "ca_file": {
+                "caFile": {
                     "type": "string",
                     "default": "",
-                    "title": "The ca_file Schema",
+                    "title": "File path to self-managed CA bundle.",
                     "examples": [
                         ""
                     ]
+                },
+                "serviceAnnotations": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The serviceAnnotations Schema",
+                    "required": [],
+                    "properties": {},
+                    "examples": [{}]
                 },
                 "secretAnnotations": {
                     "type": "object",
@@ -1464,11 +1570,33 @@
                     "enabled": true,
                     "recreate": true
                 },
-                "cert_file": "",
-                "key_file": "",
-                "ca_file": "",
+                "certFile": "",
+                "keyFile": "",
+                "caFile": "",
                 "secretAnnotations": {},
                 "secretLabels": {}
+            }]
+        },
+        "crds": {
+            "type": "object",
+            "default": {},
+            "title": "The CRDs Schema",
+            "required": [
+                "create"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "create": {
+                    "type": "boolean",
+                    "default": true,
+                    "title": "Create CRDs",
+                    "examples": [
+                        true
+                    ]
+                }
+            },
+            "examples": [{
+                "create": true
             }]
         },
         "role": {
@@ -1478,6 +1606,7 @@
             "required": [
                 "create"
             ],
+            "additionalProperties": false,
             "properties": {
                 "create": {
                     "type": "boolean",
@@ -1499,6 +1628,7 @@
             "required": [
                 "create"
             ],
+            "additionalProperties": false,
             "properties": {
                 "create": {
                     "type": "boolean",
@@ -1564,55 +1694,12 @@
             ]
         },
         "securityContext": {
-            "type": "object",
-            "default": {},
-            "title": "The securityContext Schema",
-            "required": [
-                "runAsGroup",
-                "runAsNonRoot",
-                "runAsUser",
-                "fsGroup"
-            ],
-            "properties": {
-                "runAsGroup": {
-                    "type": "integer",
-                    "default": 0,
-                    "title": "The runAsGroup Schema",
-                    "examples": [
-                        65532
-                    ]
-                },
-                "runAsNonRoot": {
-                    "type": "boolean",
-                    "default": false,
-                    "title": "The runAsNonRoot Schema",
-                    "examples": [
-                        true
-                    ]
-                },
-                "runAsUser": {
-                    "type": "integer",
-                    "default": 0,
-                    "title": "The runAsUser Schema",
-                    "examples": [
-                        65532
-                    ]
-                },
-                "fsGroup": {
-                    "type": "integer",
-                    "default": 0,
-                    "title": "The fsGroup Schema",
-                    "examples": [
-                        65532
-                    ]
-                }
-            },
-            "examples": [{
-                "runAsGroup": 65532,
-                "runAsNonRoot": true,
-                "runAsUser": 65532,
-                "fsGroup": 65532
-            }]
+          "type": "object",
+          "default": {},
+          "title": "The securityContext Schema",
+          "required": [],
+          "properties": {},
+          "examples": [{}]
         },
         "testFramework": {
             "type": "object",
@@ -1621,6 +1708,7 @@
             "required": [
                 "image"
             ],
+            "additionalProperties": false,
             "properties": {
                 "image": {
                     "type": "object",
@@ -1630,6 +1718,7 @@
                         "repository",
                         "tag"
                     ],
+                    "additionalProperties": false,
                     "properties": {
                         "repository": {
                             "type": "string",
@@ -1660,6 +1749,14 @@
                     "tag": "latest"
                 }
             }]
+        },
+        "additionalLabels": {
+            "type": "object",
+            "default": {},
+            "title": "The additionalLabels Schema",
+            "required": [],
+            "properties": {},
+            "examples": [{}]
         }
     },
     "examples": [{
@@ -1674,11 +1771,11 @@
         "manager": {
             "image": {
                 "repository": "ghcr.io/open-telemetry/opentelemetry-operator/opentelemetry-operator",
-                "tag": "v0.89.0"
+                "tag": "v0.93.0"
             },
             "collectorImage": {
                 "repository": "otel/opentelemetry-collector-contrib",
-                "tag": "0.89.0"
+                "tag": "0.93.0"
             },
             "opampBridgeImage": {
                 "repository": "",
@@ -1812,9 +1909,9 @@
                 "enabled": true,
                 "recreate": true
             },
-            "cert_file": "",
-            "key_file": "",
-            "ca_file": "",
+            "certFile": "",
+            "keyFile": "",
+            "caFile": "",
             "secretAnnotations": {},
             "secretLabels": {}
         },

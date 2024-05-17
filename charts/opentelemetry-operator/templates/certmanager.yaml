@@ -9,12 +9,12 @@ metadata:
   labels:
     {{- include "opentelemetry-operator.labels" . | nindent 4 }}
     app.kubernetes.io/component: webhook
-  name: {{ template "opentelemetry-operator.fullname" . }}-serving-cert
+  name: {{ template "opentelemetry-operator.webhookCertName" . }}
   namespace: {{ .Release.Namespace }}
 spec:
   dnsNames:
     - {{ template "opentelemetry-operator.fullname" . }}-webhook.{{ .Release.Namespace }}.svc
-    - {{ template "opentelemetry-operator.fullname" . }}-webhook.{{ .Release.Namespace }}.svc.cluster.local
+    - {{ template "opentelemetry-operator.fullname" . }}-webhook.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
   issuerRef:
     {{- if .Values.admissionWebhooks.certManager.issuerRef }}
     {{- toYaml .Values.admissionWebhooks.certManager.issuerRef | nindent 4 }}

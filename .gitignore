@@ -1,6 +1,6 @@
 .vscode
 .idea
-Chart.lock
+.DS_Store
 
 ### Helm ###
 **/charts/*.tgz

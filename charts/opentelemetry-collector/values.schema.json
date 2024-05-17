@@ -131,7 +131,11 @@
         "create": {
           "description": "Specifies whether a configMap should be created (true by default).",
           "type": "boolean"
-        }
+        },
+        "existingName": {
+          "description": "Specifies an existing configMap to be mounted to the pod",
+          "type": "string"
+        }        
       }
     },
     "config": {
@@ -143,6 +147,9 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "registry": {
+          "type": "string"
+        },
         "repository": {
           "type": "string"
         },
@@ -351,6 +358,9 @@
             "cpu": {
               "type": ["string", "integer"]
             },
+            "ephemeral-storage": {
+              "type": "string"
+            },
             "memory": {
               "type": "string"
             }
@@ -362,6 +372,9 @@
           "properties": {
             "cpu": {
               "type": ["string", "integer"]
+            },
+            "ephemeral-storage": {
+              "type": "string"
             },
             "memory": {
               "type": "string"
@@ -547,6 +560,12 @@
     },
     "hostNetwork": {
       "type": "boolean"
+    },
+    "hostAliases": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
     },
     "dnsPolicy": {
       "type": "string",

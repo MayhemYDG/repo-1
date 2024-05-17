@@ -1,5 +1,8 @@
 # OpenTelemetry Operator Helm Chart
 
+> [!WARNING]  
+> Version 0.58.0 of this Chart includes a new version of the `OpenTelemetryCollector` CRD. See [this document][v1beta1_migration] for upgrade instructions for the new Operator CRD. Please make sure you also follow the [helm upgrade instructions](./UPGRADING.md#0560-to-0570) for helm chart 0.57.0.
+
 The Helm chart installs [OpenTelemetry Operator](https://github.com/open-telemetry/opentelemetry-operator) in Kubernetes cluster.
 The OpenTelemetry Operator is an implementation of a [Kubernetes Operator](https://www.openshift.com/learn/topics/operators).
 At this point, it has [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector) as the only managed component.
@@ -14,12 +17,12 @@ At this point, it has [OpenTelemetry Collector](https://github.com/open-telemetr
 In Kubernetes, in order for the API server to communicate with the webhook component, the webhook requires a TLS
 certificate that the API server is configured to trust. There are a few different ways you can use to generate/configure the required TLS certificate.
 
-  - The easiest and default method is to install the [cert-manager](https://cert-manager.io/docs/) and set `admissionWebhooks.certManager.create` to `true`.
+  - The easiest and default method is to install the [cert-manager](https://cert-manager.io/docs/) and set `admissionWebhooks.certManager.enabled` to `true`.
     In this way, cert-manager will generate a self-signed certificate. _See [cert-manager installation](https://cert-manager.io/docs/installation/kubernetes/) for more details._
   - You can provide your own Issuer by configuring the `admissionWebhooks.certManager.issuerRef` value. You will need
     to specify the `kind` (Issuer or ClusterIssuer) and the `name`. Note that this method also requires the installation of cert-manager.
-  - You can use an automatically generated self-signed certificate by setting `admissionWebhooks.certManager.enabled` to `false` and `admissionWebhooks.autoGenerateCert` to `true`. Helm will create a self-signed cert and a secret for you.
-  - You can use your own generated self-signed certificate by setting both `admissionWebhooks.certManager.enabled` and `admissionWebhooks.autoGenerateCert` to `false`. You should provide the necessary values to `admissionWebhooks.cert_file`, `admissionWebhooks.key_file`, and `admissionWebhooks.ca_file`.
+  - You can use an automatically generated self-signed certificate by setting `admissionWebhooks.certManager.enabled` to `false` and `admissionWebhooks.autoGenerateCert.enabled` to `true`. Helm will create a self-signed cert and a secret for you.
+  - You can use your own generated self-signed certificate by setting both `admissionWebhooks.certManager.enabled` and `admissionWebhooks.autoGenerateCert.enabled` to `false`. You should provide the necessary values to `admissionWebhooks.certFile`, `admissionWebhooks.keyFile`, and `admissionWebhooks.caFile`.
   - You can sideload custom webhooks and certificate by disabling `.Values.admissionWebhooks.create` and `admissionWebhooks.certManager.enabled` while setting your custom cert secret name in `admissionWebhooks.secretName`
   - You can disable webhooks altogether by disabling `.Values.admissionWebhooks.create` and setting env var to `ENABLE_WEBHOOKS: "false"`
 
@@ -34,23 +37,29 @@ _See [helm repo](https://helm.sh/docs/helm/helm_repo/) for command documentation
 
 ## Install Chart
 
+> [!NOTE]  
+> This Chart uses templated CRDs, and therefore does not support `--skip-crds`. Use `crds.create=false` instead if you do not want the chart to install the OpenTelemetry Operator's CRDs.
+
 ```console
-$ helm install \
-  opentelemetry-operator open-telemetry/opentelemetry-operator
+$ helm install opentelemetry-operator open-telemetry/opentelemetry-operator \
+--set "manager.collectorImage.repository=otel/opentelemetry-collector-k8s"
 ```
 
 If you created a custom namespace, like in the TLS Certificate Requirement section above, you will need to specify the namespace with the `--namespace` helm option:
 
 ```console
-$ helm install --namespace opentelemetry-operator-system \
-  opentelemetry-operator open-telemetry/opentelemetry-operator
+$ helm install opentelemetry-operator open-telemetry/opentelemetry-operator \
+--namespace opentelemetry-operator-system \
+--set "manager.collectorImage.repository=otel/opentelemetry-collector-k8s"
 ```
 
 If you wish for helm to create an automatically generated self-signed certificate, make sure to set the appropriate values when installing the chart:
 
 ```console
-$ helm install  --set admissionWebhooks.certManager.enabled=false --set admissionWebhooks.certManager.autoGenerateCert=true \
-  opentelemetry-operator open-telemetry/opentelemetry-operator
+$ helm install opentelemetry-operator open-telemetry/opentelemetry-operator \
+--set "manager.collectorImage.repository=otel/opentelemetry-collector-k8s" \
+--set admissionWebhooks.certManager.enabled=false \
+--set admissionWebhooks.autoGenerateCert.enabled=true
 ```
 
 _See [helm install](https://helm.sh/docs/helm/helm_install/) for command documentation._
@@ -71,6 +80,8 @@ The OpenTelemetry Collector CRD created by this chart won't be removed by defaul
 
 ```console
 $ kubectl delete crd opentelemetrycollectors.opentelemetry.io
+$ kubectl delete crd opampbridges.opentelemetry.io
+$ kubectl delete crd instrumentations.opentelemetry.io
 ```
 
 ## Upgrade Chart
@@ -273,3 +284,5 @@ spec:
         protocol: TCP
 EOF
 ```
+
+[v1beta1_migration]: https://github.com/open-telemetry/opentelemetry-operator/blob/main/docs/crd-changelog.md#opentelemetrycollectoropentelemetryiov1beta1
