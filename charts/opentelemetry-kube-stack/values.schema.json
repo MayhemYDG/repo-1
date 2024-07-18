@@ -1,6 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/open-telemetry/opentelemetry-operator/apis/v1alpha1/open-telemetry-collector-spec",
+  "$schema": "http://json-schema.org/schema#",
   "$defs": {
     "AWSElasticBlockStoreVolumeSource": {
       "properties": {
@@ -1079,7 +1078,7 @@
         "enableMetrics": {
           "type": "boolean"
         },
-        "DisablePrometheusAnnotations": {
+        "disablePrometheusAnnotations": {
           "type": "boolean"
         }
       },
@@ -1279,6 +1278,92 @@
     },
     "OpenTelemetryCollectorSpec": {
       "properties": {
+        "presets": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "logsCollection": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "description": "Specifies whether the collector should collect logs.",
+                  "type": "boolean"
+                },
+                "includeCollectorLogs": {
+                  "description": "Specifies whether the collector should collect its own logs.",
+                  "type": "boolean"
+                },
+                "storeCheckpoints": {
+                  "description": "Specifies whether logs checkpoints should be stored in /var/lib/otelcol/ host directory.",
+                  "type": "boolean"
+                },
+                "maxRecombineLogSize": {
+                  "description": "Specifies the max recombine log size.",
+                  "type": "integer"
+                }
+              }
+            },
+            "hostMetrics": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "description": "Specifies whether the collector should collect host metrics.",
+                  "type": "boolean"
+                }
+              }
+            },
+            "kubeletMetrics": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "description": "Specifies whether the collector should collect kubelet metrics.",
+                  "type": "boolean"
+                }
+              }
+            },
+            "kubernetesAttributes": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "description": "Specifies whether the collector should add Kubernetes metdata to resource attributes.",
+                  "type": "boolean"
+                },
+                "extractAllPodLabels": {
+                  "description": "Specifies whether the k8sattributes processor should extract all pod labels.",
+                  "type": "boolean"
+                },
+                "extractAllPodAnnotations": {
+                  "description": "Specifies whether the k8sattributes processor should extract all pod annotations.",
+                  "type": "boolean"
+                }
+              }
+            },
+            "kubernetesEvents": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "description": "Specifies whether the collector should collect Kubernetes objects.",
+                  "type": "boolean"
+                }
+              }
+            },
+            "clusterMetrics": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "description": "Specifies whether the collector should collect cluster metrics.",
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
         "enabled": {
           "type": "boolean"
         },
@@ -1294,7 +1379,10 @@
             }
           }
         },
-        "name": {
+        "suffix": {
+          "type": "string"
+        },
+        "fullnameOverride": {
           "type": "string"
         },
         "annotations": {
@@ -1517,27 +1605,7 @@
           "type": "string"
         },
         "image": {
-          "description": "Image use in both standalone and agent configs",
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "registry": {
-              "type": "string"
-            },
-            "repository": {
-              "type": "string"
-            },
-            "tag": {
-              "type": "string"
-            },
-            "digest": {
-              "type": "string"
-            },
-            "pullPolicy": {
-              "type": "string",
-              "enum": ["IfNotPresent", "Always", "Never"]
-            }
-          }
+          "type": "string"
         },
         "enabled": {
           "type": "boolean"
@@ -1591,16 +1659,10 @@
           "type": "string"
         },
         "podMonitorSelector": {
-          "additionalProperties": {
-            "type": "string"
-          },
-          "type": "object"
+          "$ref": "#/$defs/LabelSelector"
         },
         "serviceMonitorSelector": {
-          "additionalProperties": {
-            "type": "string"
-          },
-          "type": "object"
+          "$ref": "#/$defs/LabelSelector"
         }
       },
       "additionalProperties": false,
@@ -3172,6 +3234,14 @@
     }
   },
   "properties": {
+    "crds": {
+      "type": "object",
+      "properties": {
+        "install": {
+          "type": "boolean"
+        }
+      }
+    },
     "fullnameOverride": {
       "type": "string"
     },

@@ -88,6 +88,9 @@
         "frontendProxy": {
           "$ref": "#/definitions/Component"
         },
+        "imageprovider": {
+          "$ref": "#/definitions/Component"
+        },
         "loadgenerator": {
           "$ref": "#/definitions/Component"
         },
@@ -109,7 +112,7 @@
         "kafka": {
           "$ref": "#/definitions/Component"
         },
-        "redis": {
+        "valkey": {
           "$ref": "#/definitions/Component"
         }
       },

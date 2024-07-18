@@ -10,6 +10,9 @@ securityContext:
 hostAliases:
   {{- toYaml . | nindent 2 }}
 {{- end }}
+{{- if $.Values.shareProcessNamespace }}
+shareProcessNamespace: true
+{{- end }}
 containers:
   - name: {{ include "opentelemetry-collector.lowercase_chartname" . }}
     {{- if .Values.command.name }}
@@ -135,7 +138,7 @@ containers:
         mountPropagation: HostToContainer
       {{- end }}
       {{- if .Values.extraVolumeMounts }}
-      {{- toYaml .Values.extraVolumeMounts | nindent 6 }}
+      {{- tpl (toYaml .Values.extraVolumeMounts) . | nindent 6 }}
       {{- end }}
 {{- if .Values.extraContainers }}
   {{- tpl (toYaml .Values.extraContainers) . | nindent 2 }}
@@ -176,7 +179,7 @@ volumes:
       path: /
   {{- end }}
   {{- if .Values.extraVolumes }}
-  {{- toYaml .Values.extraVolumes | nindent 2 }}
+  {{- tpl (toYaml .Values.extraVolumes) . | nindent 2 }}
   {{- end }}
 {{- with .Values.nodeSelector }}
 nodeSelector:
