@@ -6,7 +6,7 @@ require (
 	github.com/cloudflare/cfssl v1.6.4
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/elastic/crd-ref-docs v0.0.9
-	github.com/go-logr/logr v1.2.4
+	github.com/go-logr/logr v1.4.1
 	github.com/go-stomp/stomp v2.1.4+incompatible
 	github.com/michaelklishin/rabbit-hole/v2 v2.15.0
 	github.com/mikefarah/yq/v4 v4.35.2
@@ -22,7 +22,7 @@ require (
 	k8s.io/api v0.28.1
 	k8s.io/apimachinery v0.28.2
 	k8s.io/client-go v0.28.1
-	k8s.io/klog/v2 v2.100.1
+	k8s.io/klog/v2 v2.130.1
 	k8s.io/utils v0.0.0-20230726121419-3b25d923346b
 	sigs.k8s.io/controller-runtime v0.15.1
 	sigs.k8s.io/controller-runtime/tools/setup-envtest v0.0.0-20220217024943-cfd92767d28e
