@@ -381,7 +381,7 @@ jobs:
     - continue-on-error: true
       if: github.event_name != 'pull_request'
       name: Upload operator manifests
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         if-no-files-found: error
         name: operator-manifests
@@ -2427,7 +2427,7 @@ jobs:
     - continue-on-error: true
       if: github.event_name != 'pull_request'
       name: Upload release header
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         if-no-files-found: error
         name: release-header
