@@ -15,7 +15,7 @@ require (
 	github.com/rabbitmq/amqp091-go v1.9.0
 	github.com/rabbitmq/rabbitmq-stream-go-client v1.2.1
 	github.com/sclevine/yj v0.0.0-20200815061347-554173e71934
-	golang.org/x/mod v0.13.0
+	golang.org/x/mod v0.21.0
 	golang.org/x/net v0.17.0
 	golang.org/x/vuln v1.0.1
 	gopkg.in/ini.v1 v1.67.0
