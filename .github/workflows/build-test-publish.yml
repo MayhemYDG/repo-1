@@ -938,12 +938,12 @@ jobs:
       uses: actions/checkout@v4
     - continue-on-error: true
       name: Get operator manifest
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: operator-manifests
     - continue-on-error: true
       name: Get release header
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: release-header
     - continue-on-error: true
@@ -1239,7 +1239,7 @@ jobs:
         location: europe-west1
     - continue-on-error: true
       name: Get operator manifest
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: operator-manifests
     - continue-on-error: true
@@ -2120,7 +2120,7 @@ jobs:
         location: europe-west1
     - continue-on-error: true
       name: Get operator manifest
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: operator-manifests
     - continue-on-error: true
@@ -2416,7 +2416,7 @@ jobs:
         location: europe-west1
     - continue-on-error: true
       name: Get operator manifest
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: operator-manifests
     - continue-on-error: true
