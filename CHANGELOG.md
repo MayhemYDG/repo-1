@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.4.0](https://github.com/MayhemYDG/repo-1/compare/v0.3.0...0.4.0) (2024-10-14)
+
+
+### Features
+
+* Add documentation generation support ([f6d769d](https://github.com/MayhemYDG/repo-1/commit/f6d769d3e45da60fbd9b7c01d3b8c903a66e975a))
+* Add initial implementation of provider ([a27e98a](https://github.com/MayhemYDG/repo-1/commit/a27e98a6e7483fce812e1bee9fb2a85582396d5a))
+* Add support for provider events. ([#12](https://github.com/MayhemYDG/repo-1/issues/12)) ([c69231a](https://github.com/MayhemYDG/repo-1/commit/c69231a48a6483d789d99474e6ae3d83ffcb18d1))
+* Add support for shutdown method ([#3](https://github.com/MayhemYDG/repo-1/issues/3)) ([8ed56a6](https://github.com/MayhemYDG/repo-1/commit/8ed56a68db3be92c1c0ff58ddd28a9511bf98cdf))
+* Expose LDClient from provider ([#21](https://github.com/MayhemYDG/repo-1/issues/21)) ([4d391c0](https://github.com/MayhemYDG/repo-1/commit/4d391c0679c5c3264c70933df55d428c0b5d2319))
+
+
+### Bug Fixes
+
+* Adjust docs and pypi badges ([#6](https://github.com/MayhemYDG/repo-1/issues/6)) ([688175d](https://github.com/MayhemYDG/repo-1/commit/688175d1eaa13186fe061079e01944fc3a153871))
+* Correct project documentation link ([#19](https://github.com/MayhemYDG/repo-1/issues/19)) ([bcc2573](https://github.com/MayhemYDG/repo-1/commit/bcc25731069146db6931223751c8dfa74e5ac1c0))
+* Ignore embedded kind when processing multi-kind contexts ([#15](https://github.com/MayhemYDG/repo-1/issues/15)) ([dd17a4c](https://github.com/MayhemYDG/repo-1/commit/dd17a4c2cc69804eff1faa2c45b84b0048a816e8))
+* Log warning if targeting key is not a string ([#16](https://github.com/MayhemYDG/repo-1/issues/16)) ([7a8c835](https://github.com/MayhemYDG/repo-1/commit/7a8c835f39caf25791989d521d1f44d18d9c5586))
+* Use canonical import paths for openfeature classes ([#11](https://github.com/MayhemYDG/repo-1/issues/11)) ([e60ec31](https://github.com/MayhemYDG/repo-1/commit/e60ec315812952933cb253b6628ef5446f62edc6))
+
+
+### Documentation
+
+* Add supporting documentation ([06a3701](https://github.com/MayhemYDG/repo-1/commit/06a370193f151207c15c06a82a44ffbb68949455))
+* Clarify beta version warning and dependencies ([#8](https://github.com/MayhemYDG/repo-1/issues/8)) ([6576453](https://github.com/MayhemYDG/repo-1/commit/65764536ace64875a007def5f1881e59a533539b))
+* Fix readthedocs generation ([#10](https://github.com/MayhemYDG/repo-1/issues/10)) ([da5283d](https://github.com/MayhemYDG/repo-1/commit/da5283d1e8e417a43d63acfd5ee1d045fd63651c))
+* Fix usage to reflect latest refactor ([#14](https://github.com/MayhemYDG/repo-1/issues/14)) ([ba4e662](https://github.com/MayhemYDG/repo-1/commit/ba4e6621bbf03977e7a8dc8bbe36171609a21f61))
+
 ## [0.3.0](https://github.com/launchdarkly/openfeature-python-server/compare/0.2.2...0.3.0) (2024-10-04)
 
 
