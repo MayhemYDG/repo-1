@@ -1833,7 +1833,7 @@ jobs:
       uses: open-policy-agent/setup-opa@v1
     - continue-on-error: true
       name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
+      uses: docker/setup-qemu-action@v3
       with:
         platforms: arm64
     - continue-on-error: true
