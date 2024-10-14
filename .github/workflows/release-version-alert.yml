@@ -323,7 +323,7 @@ jobs:
         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       if: env.SKIP_STEPS != 'true'
       name: Slack Notification
-      uses: slackapi/slack-github-action@v1.24.0
+      uses: slackapi/slack-github-action@v1.27.0
       with:
         channel-id: C05S1QMKL5D
         slack-message: ${{ env.SLACK_MESSAGE }}
