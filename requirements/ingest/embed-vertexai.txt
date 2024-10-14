@@ -22,16 +22,16 @@ cachetools==5.3.3
     # via google-auth
 certifi==2024.2.2
     # via
-    #   -c ./ingest/../base.txt
-    #   -c ./ingest/../deps/constraints.txt
+    #   -c ingest/../base.txt
+    #   -c ingest/../deps/constraints.txt
     #   requests
 charset-normalizer==3.3.2
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   requests
 dataclasses-json==0.6.4
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   langchain
     #   langchain-community
 docstring-parser==0.16
@@ -82,6 +82,8 @@ googleapis-common-protos[grpc]==1.63.0
     #   google-api-core
     #   grpc-google-iam-v1
     #   grpcio-status
+greenlet==3.1.1
+    # via sqlalchemy
 grpc-google-iam-v1==0.13.0
     # via google-cloud-resource-manager
 grpcio==1.62.2
@@ -94,7 +96,7 @@ grpcio-status==1.62.2
     # via google-api-core
 idna==3.7
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   requests
     #   yarl
 jsonpatch==1.33
@@ -104,10 +106,10 @@ jsonpatch==1.33
 jsonpointer==2.4
     # via jsonpatch
 langchain==0.1.16
-    # via -r ./ingest/embed-vertexai.in
+    # via -r ingest/embed-vertexai.in
 langchain-community==0.0.34
     # via
-    #   -r ./ingest/embed-vertexai.in
+    #   -r ingest/embed-vertexai.in
     #   langchain
 langchain-core==0.1.46
     # via
@@ -115,8 +117,8 @@ langchain-core==0.1.46
     #   langchain-community
     #   langchain-google-vertexai
     #   langchain-text-splitters
-langchain-google-vertexai==1.0.2
-    # via -r ./ingest/embed-vertexai.in
+langchain-google-vertexai==1.0.4
+    # via -r ingest/embed-vertexai.in
 langchain-text-splitters==0.0.1
     # via langchain
 langsmith==0.1.51
@@ -126,7 +128,7 @@ langsmith==0.1.51
     #   langchain-core
 marshmallow==3.21.1
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   dataclasses-json
 multidict==6.0.5
     # via
@@ -134,11 +136,11 @@ multidict==6.0.5
     #   yarl
 mypy-extensions==1.0.0
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   typing-inspect
 numpy==1.26.4
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   langchain
     #   langchain-community
     #   shapely
@@ -146,8 +148,8 @@ orjson==3.10.1
     # via langsmith
 packaging==23.2
     # via
-    #   -c ./ingest/../base.txt
-    #   -c ./ingest/../deps/constraints.txt
+    #   -c ingest/../base.txt
+    #   -c ingest/../deps/constraints.txt
     #   google-cloud-aiplatform
     #   google-cloud-bigquery
     #   langchain-core
@@ -159,7 +161,7 @@ proto-plus==1.23.0
     #   google-cloud-resource-manager
 protobuf==4.23.4
     # via
-    #   -c ./ingest/../deps/constraints.txt
+    #   -c ingest/../deps/constraints.txt
     #   google-api-core
     #   google-cloud-aiplatform
     #   google-cloud-resource-manager
@@ -183,7 +185,7 @@ pydantic-core==2.18.2
     # via pydantic
 python-dateutil==2.9.0.post0
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   google-cloud-bigquery
 pyyaml==6.0.1
     # via
@@ -192,7 +194,7 @@ pyyaml==6.0.1
     #   langchain-core
 requests==2.31.0
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   google-api-core
     #   google-cloud-bigquery
     #   google-cloud-storage
@@ -205,7 +207,7 @@ shapely==2.0.4
     # via google-cloud-aiplatform
 six==1.16.0
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   python-dateutil
 sqlalchemy==2.0.29
     # via
@@ -216,27 +218,21 @@ tenacity==8.2.3
     #   langchain
     #   langchain-community
     #   langchain-core
-types-protobuf==4.25.0.20240417
-    # via langchain-google-vertexai
-types-requests==2.31.0.6
-    # via langchain-google-vertexai
-types-urllib3==1.26.25.14
-    # via types-requests
 typing-extensions==4.11.0
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   pydantic
     #   pydantic-core
     #   sqlalchemy
     #   typing-inspect
 typing-inspect==0.9.0
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   dataclasses-json
 urllib3==1.26.18
     # via
-    #   -c ./ingest/../base.txt
-    #   -c ./ingest/../deps/constraints.txt
+    #   -c ingest/../base.txt
+    #   -c ingest/../deps/constraints.txt
     #   requests
 yarl==1.9.4
     # via aiohttp
