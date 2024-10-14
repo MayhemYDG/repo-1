@@ -20,19 +20,19 @@ attrs==23.2.0
     # via aiohttp
 botocore==1.34.51
     # via
-    #   -c ./ingest/../deps/constraints.txt
+    #   -c ingest/../deps/constraints.txt
     #   aiobotocore
 frozenlist==1.4.1
     # via
     #   aiohttp
     #   aiosignal
-fsspec==2024.3.1
+fsspec==2024.9.0
     # via
-    #   -r ./ingest/s3.in
+    #   -r ingest/s3.in
     #   s3fs
 idna==3.7
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   yarl
 jmespath==1.0.1
     # via botocore
@@ -42,26 +42,26 @@ multidict==6.0.5
     #   yarl
 python-dateutil==2.9.0.post0
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   botocore
-s3fs==2024.3.1
-    # via -r ./ingest/s3.in
+s3fs==2024.9.0
+    # via -r ingest/s3.in
 six==1.16.0
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   python-dateutil
 typing-extensions==4.11.0
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   aioitertools
 urllib3==1.26.18
     # via
-    #   -c ./ingest/../base.txt
-    #   -c ./ingest/../deps/constraints.txt
+    #   -c ingest/../base.txt
+    #   -c ingest/../deps/constraints.txt
     #   botocore
 wrapt==1.16.0
     # via
-    #   -c ./ingest/../base.txt
+    #   -c ingest/../base.txt
     #   aiobotocore
 yarl==1.9.4
     # via aiohttp
