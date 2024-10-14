@@ -258,7 +258,7 @@ jobs:
     - continue-on-error: true
       id: tag-parse
       name: Validate and Parse Tag
-      uses: smartcontractkit/.github/actions/check-git-tag-for-monorepo@9e7cc0779934cae4a9028b8588c9adb64d8ce68c
+      uses: smartcontractkit/.github/actions/check-git-tag-for-monorepo@5b1046c28343660ecb84844c6fa95a66d1cdb52e
       with:
         tag-ref: ${{ inputs.tag || github.ref_name }}
     - name: after
