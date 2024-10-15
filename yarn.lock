@@ -7219,7 +7219,7 @@ __metadata:
     react-dom: ^18.3.1
     react-streaming: ^0.3.43
     styled-components: ^5.3.11
-    swiper: ^11.1.12
+    swiper: ^11.1.14
     tsconfig: "workspace:^"
     typescript: ~5.1.6
     video.js: ^8.17.4
@@ -9912,7 +9912,7 @@ __metadata:
     react-dom: ^18.3.1
     react-streaming: ^0.3.43
     styled-components: ^5.3.11
-    swiper: ^11.1.12
+    swiper: ^11.1.14
     tsconfig: "workspace:^"
     typescript: ~5.1.6
     video.js: ^8.17.4
@@ -9963,10 +9963,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swiper@npm:^11.1.12":
-  version: 11.1.12
-  resolution: "swiper@npm:11.1.12"
-  checksum: c202d7952093e69d59eef0df46cae280f590f7090b20aa9a0babf2b9f705a25a291e46859c169d2c088f98d44b34b72cd33d6a2aa61eb1449e6f9e91052bbe46
+"swiper@npm:^11.1.14":
+  version: 11.1.14
+  resolution: "swiper@npm:11.1.14"
+  checksum: 87bf4c42d893c76d3545d42ad664b78b032f7768c99f3d90d8340c035d661e10e7805c3270df704f8da99508304e8ca87cab61d3c863586d9d231c9f718ae785
   languageName: node
   linkType: hard
 
