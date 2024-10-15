@@ -1752,9 +1752,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@reduxjs/toolkit@npm:^2.2.7":
-  version: 2.2.7
-  resolution: "@reduxjs/toolkit@npm:2.2.7"
+"@reduxjs/toolkit@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "@reduxjs/toolkit@npm:2.3.0"
   dependencies:
     immer: ^10.0.3
     redux: ^5.0.1
@@ -1768,7 +1768,7 @@ __metadata:
       optional: true
     react-redux:
       optional: true
-  checksum: 039d61d94cec25d07c7813f9cd234cbe83478f65df7622f2dafed609f2f0cbe00565999e33e7d22bf915c3c5bceb7be606ca17a9c55b51ce1841f541f63a3395
+  checksum: 1a0d85978f99a44f7ceabec8623f46cdd2a2dc25d809dfb0d5c9cd13e2aa12cf116cffe34a4ed949169804dc6125ef9cf68143225e9527f861b597ea701e8bb5
   languageName: node
   linkType: hard
 
@@ -3964,7 +3964,7 @@ __metadata:
   dependencies:
     "@bigcommerce/big-design": ^1.4.0
     "@bigcommerce/big-design-theme": ^1.1.0
-    "@reduxjs/toolkit": ^2.2.7
+    "@reduxjs/toolkit": ^2.3.0
     "@testing-library/react": ^15.0.7
     "@testing-library/user-event": ^14.5.2
     "@types/node": ^20.16.5
