@@ -259,7 +259,7 @@ jobs:
       name: Get yarn cache directory path
       run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
     - continue-on-error: true
-      uses: actions/cache@v3.0.11
+      uses: actions/cache@v4.1.1
       with:
         key: yarn-${{ hashFiles('**/yarn.lock') }}
         path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
