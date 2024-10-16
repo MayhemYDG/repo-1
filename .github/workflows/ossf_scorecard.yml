@@ -262,14 +262,14 @@ jobs:
         results_format: sarif
     - continue-on-error: true
       name: Upload artifact
-      uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874
+      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       with:
         name: SARIF file
         path: results.sarif
         retention-days: 5
     - continue-on-error: true
       name: Upload to code-scanning
-      uses: github/codeql-action/upload-sarif@430e27ef200cf61455a15dd5b56e130c8227a563
+      uses: github/codeql-action/upload-sarif@ad94f2fbab5f938318d429990f508886592fd1cb
       with:
         sarif_file: results.sarif
     - name: after
