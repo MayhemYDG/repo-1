@@ -251,7 +251,7 @@ jobs:
         secrets.GH_BOT_ACCESS_TOKEN }}@github.com/grafana/website-sync ./.github/actions/website-sync
     - continue-on-error: true
       name: setup node
-      uses: actions/setup-node@v3.5.1
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: '16'
     - continue-on-error: true

@@ -561,7 +561,7 @@ jobs:
         path: ./base
         ref: ${{ github.event.pull_request.base.ref }}
     - continue-on-error: true
-      uses: actions/setup-node@v3.5.1
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 16.16.0
     - continue-on-error: true
@@ -851,7 +851,7 @@ jobs:
       with:
         path: ./pr
     - continue-on-error: true
-      uses: actions/setup-node@v3.5.1
+      uses: actions/setup-node@v4.0.4
       with:
         node-version: 16.16.0
     - continue-on-error: true
