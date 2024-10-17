@@ -107,7 +107,7 @@
     "karma-webpack": "^4.0.2",
     "mocha": "^8.2.1",
     "node-libs-browser": "^2.0.0",
-    "nodemon": "^2.0.6",
+    "nodemon": "^3.1.7",
     "object-assign": "^4.1.1",
     "prettier": "^2.0.0",
     "react": "^16.8.3",
