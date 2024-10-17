@@ -256,7 +256,7 @@ jobs:
     - continue-on-error: true
       id: pnpm-install
       name: Install pnpm
-      uses: pnpm/action-setup@v2
+      uses: pnpm/action-setup@v4
       with:
         run_install: false
         version: 8
