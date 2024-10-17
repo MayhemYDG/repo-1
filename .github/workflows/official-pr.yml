@@ -291,7 +291,7 @@ jobs:
     - continue-on-error: true
       if: ${{ steps.create-pr.outputs.pull-request-url != '' }}
       name: Create PR comment
-      uses: peter-evans/create-or-update-comment@v2
+      uses: peter-evans/create-or-update-comment@v4
       with:
         body: 'Created PR on the official-images repo (${{ steps.create-pr.outputs.pull-request-url
           }}). See https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what
