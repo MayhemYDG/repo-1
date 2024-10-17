@@ -7,7 +7,7 @@ import (
 )
 
 /*
- * ZLint Copyright 2023 Regents of the University of Michigan
+ * ZLint Copyright 2024 Regents of the University of Michigan
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy
@@ -27,18 +27,21 @@ import (
 type LintSource string
 
 const (
-	UnknownLintSource        LintSource = "Unknown"
-	RFC3279                  LintSource = "RFC3279"
-	RFC5280                  LintSource = "RFC5280"
-	RFC5480                  LintSource = "RFC5480"
-	RFC5891                  LintSource = "RFC5891"
-	RFC8813                  LintSource = "RFC8813"
-	CABFBaselineRequirements LintSource = "CABF_BR"
-	CABFEVGuidelines         LintSource = "CABF_EV"
-	MozillaRootStorePolicy   LintSource = "Mozilla"
-	AppleRootStorePolicy     LintSource = "Apple"
-	Community                LintSource = "Community"
-	EtsiEsi                  LintSource = "ETSI_ESI"
+	UnknownLintSource             LintSource = "Unknown"
+	RFC3279                       LintSource = "RFC3279"
+	RFC5280                       LintSource = "RFC5280"
+	RFC5480                       LintSource = "RFC5480"
+	RFC5891                       LintSource = "RFC5891"
+	RFC6962                       LintSource = "RFC6962"
+	RFC8813                       LintSource = "RFC8813"
+	CABFBaselineRequirements      LintSource = "CABF_BR"
+	CABFCSBaselineRequirements    LintSource = "CABF_CS_BR"
+	CABFSMIMEBaselineRequirements LintSource = "CABF_SMIME_BR"
+	CABFEVGuidelines              LintSource = "CABF_EV"
+	MozillaRootStorePolicy        LintSource = "Mozilla"
+	AppleRootStorePolicy          LintSource = "Apple"
+	Community                     LintSource = "Community"
+	EtsiEsi                       LintSource = "ETSI_ESI"
 )
 
 // UnmarshalJSON implements the json.Unmarshaler interface. It ensures that the
@@ -50,7 +53,7 @@ func (s *LintSource) UnmarshalJSON(data []byte) error {
 	}
 
 	switch LintSource(throwAway) {
-	case RFC5280, RFC5480, RFC5891, CABFBaselineRequirements, CABFEVGuidelines, MozillaRootStorePolicy, AppleRootStorePolicy, Community, EtsiEsi:
+	case RFC8813, RFC5280, RFC5480, RFC5891, CABFBaselineRequirements, CABFEVGuidelines, CABFSMIMEBaselineRequirements, MozillaRootStorePolicy, AppleRootStorePolicy, Community, EtsiEsi, RFC6962:
 		*s = LintSource(throwAway)
 		return nil
 	default:
@@ -74,16 +77,22 @@ func (s *LintSource) FromString(src string) {
 		*s = RFC5480
 	case RFC5891:
 		*s = RFC5891
+	case RFC8813:
+		*s = RFC8813
 	case CABFBaselineRequirements:
 		*s = CABFBaselineRequirements
 	case CABFEVGuidelines:
 		*s = CABFEVGuidelines
+	case CABFSMIMEBaselineRequirements:
+		*s = CABFSMIMEBaselineRequirements
 	case MozillaRootStorePolicy:
 		*s = MozillaRootStorePolicy
 	case AppleRootStorePolicy:
 		*s = AppleRootStorePolicy
 	case Community:
 		*s = Community
+	case RFC6962:
+		*s = RFC6962
 	case EtsiEsi:
 		*s = EtsiEsi
 	}
