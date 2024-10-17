@@ -548,7 +548,7 @@ jobs:
     - continue-on-error: true
       id: diff
       name: Calculate file differences
-      uses: lots0logs/gh-action-get-changed-files@2.1.4
+      uses: lots0logs/gh-action-get-changed-files@2.2.2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
     - continue-on-error: true
