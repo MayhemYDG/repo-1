@@ -249,7 +249,7 @@ jobs:
     - continue-on-error: true
       id: updt
       name: Run automation script
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         result-encoding: string
         script: 'const { default: script } = await import(`${process.env.GITHUB_WORKSPACE}/build-automation.mjs`);
