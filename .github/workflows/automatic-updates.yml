@@ -260,7 +260,7 @@ jobs:
     - continue-on-error: true
       id: cpr
       name: Create update PR
-      uses: peter-evans/create-pull-request@v4
+      uses: peter-evans/create-pull-request@v7
       with:
         author: Node.js GitHub Bot <nodejs-github-bot@users.noreply.github.com>
         base: main
