@@ -258,7 +258,7 @@ jobs:
         java-version: 17
     - continue-on-error: true
       if: ${{ env.cronet == 'ok' }}
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/gradle-build-action@v3
     - continue-on-error: true
       if: ${{ env.cronet == 'ok' }}
       name: Download Cronet

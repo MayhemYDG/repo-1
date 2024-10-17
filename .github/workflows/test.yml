@@ -273,7 +273,7 @@ jobs:
         \       $GITHUB_WORKSPACE/gradle.properties -i\n"
     - continue-on-error: true
       name: Set up Gradle
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/gradle-build-action@v3
     - continue-on-error: true
       name: Build With Gradle
       run: "if [ ${{ env.type }} == 'release' ]; then\n  typeName=\"\u539F\u5305\u540D\

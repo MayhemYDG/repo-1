@@ -280,7 +280,7 @@ jobs:
         \ = \\\"${{ env.VERSION }}\\\"\" $GITHUB_WORKSPACE/app/build.gradle  -i\n"
     - continue-on-error: true
       name: Set up Gradle
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/gradle-build-action@v3
     - continue-on-error: true
       name: Build With Gradle
       run: "echo \"\u5F00\u59CB\u8FDB\u884C${{ env.product }}\u6784\u5EFA\"\nchmod\
